@@ -1,7 +1,10 @@
 package domain
 
+import "github.com/music-tribe/uuid"
+
 type Task struct {
-	Name        string `json:"name" validate:"required"`
-	Description string `json:"description" validate:"required"`
-	Completed   bool   `json:"completed"`
+	Id          uuid.UUID `json:"id"`
+	Name        string    `json:"name" validate:"required"`
+	Description string    `json:"description" validate:"required"`
+	Completed   bool      `json:"completed"`
 }
