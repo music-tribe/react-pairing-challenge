@@ -65,7 +65,7 @@ func TestGet(t *testing.T) {
 		db := getmocks.NewMockGetDatabase(ctrl)
 
 		id := uuid.New()
-		req := httptest.NewRequest(http.MethodPost, "/", nil)
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
 		ctx := e.NewContext(req, rec)
@@ -85,7 +85,7 @@ func TestGet(t *testing.T) {
 		db := getmocks.NewMockGetDatabase(ctrl)
 
 		id := uuid.New()
-		req := httptest.NewRequest(http.MethodPost, "/", nil)
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
 		ctx := e.NewContext(req, rec)
@@ -105,7 +105,7 @@ func TestGet(t *testing.T) {
 		db := getmocks.NewMockGetDatabase(ctrl)
 
 		id := uuid.New()
-		req := httptest.NewRequest(http.MethodPost, "/", nil)
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
 		ctx := e.NewContext(req, rec)

@@ -29,7 +29,7 @@ func TestGetAll(t *testing.T) {
 		defer ctrl.Finish()
 		db := getAllmocks.NewMockGetAllDatabase(ctrl)
 
-		req := httptest.NewRequest(http.MethodPost, "/", nil)
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
 		rec := httptest.NewRecorder()
 		ctx := e.NewContext(req, rec)
 
@@ -45,7 +45,7 @@ func TestGetAll(t *testing.T) {
 		defer ctrl.Finish()
 		db := getAllmocks.NewMockGetAllDatabase(ctrl)
 
-		req := httptest.NewRequest(http.MethodPost, "/", nil)
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
 		ctx := e.NewContext(req, rec)
