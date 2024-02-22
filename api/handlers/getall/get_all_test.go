@@ -10,7 +10,7 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/labstack/echo/v4"
 	"github.com/music-tribe/react-pairing-challenge/domain"
-	getAllmocks "github.com/music-tribe/react-pairing-challenge/handlers/getAll/mocks"
+	getallmocks "github.com/music-tribe/react-pairing-challenge/handlers/getall/mocks"
 	"github.com/music-tribe/uuid"
 	"github.com/stretchr/testify/assert"
 )
@@ -27,7 +27,7 @@ func TestGetAll(t *testing.T) {
 	t.Run("when we getAll an unknown error from the db we should return a 500 error", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
-		db := getAllmocks.NewMockGetAllDatabase(ctrl)
+		db := getallmocks.NewMockGetAllDatabase(ctrl)
 
 		req := httptest.NewRequest(http.MethodGet, "/", nil)
 		rec := httptest.NewRecorder()
@@ -43,7 +43,7 @@ func TestGetAll(t *testing.T) {
 	t.Run("when the request is well formed, we should getAll the task back and no error", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
-		db := getAllmocks.NewMockGetAllDatabase(ctrl)
+		db := getallmocks.NewMockGetAllDatabase(ctrl)
 
 		req := httptest.NewRequest(http.MethodGet, "/", nil)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
