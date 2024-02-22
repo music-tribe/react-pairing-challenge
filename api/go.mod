@@ -9,7 +9,6 @@ require (
 	github.com/music-tribe/uuid v1.1.1
 	github.com/stretchr/testify v1.8.4
 	go.mongodb.org/mongo-driver v1.14.0
-	gopkg.in/mgo.v2 v2.0.0-20190816093944-a6b53ec6cb22
 )
 
 require (
@@ -39,6 +38,5 @@ require (
 	golang.org/x/sys v0.17.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 	golang.org/x/time v0.5.0 // indirect
-	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
