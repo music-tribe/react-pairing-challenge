@@ -14,11 +14,13 @@ func (mdb *MongoDatabase) Add(task *domain.Task) error {
 
 	b, err := bson.Marshal(task)
 	if err != nil {
+		mdb.logger.Errorf("database.Add: bson.Marshal >> %v", err)
 		return err
 	}
 
 	_, err = coll.InsertOne(context.Background(), b)
 	if err != nil {
+		mdb.logger.Errorf("database.Add: mongo.InsertOne >> %v", err)
 		wrEx := mongo.WriteException{}
 		if errors.As(err, &wrEx) {
 			if wrEx.HasErrorCode(11000) {
