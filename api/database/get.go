@@ -6,6 +6,7 @@ import (
 	"github.com/music-tribe/react-pairing-challenge/domain"
 	"github.com/music-tribe/uuid"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 func (mdb *MongoDatabase) Get(id uuid.UUID) (*domain.Task, error) {
@@ -17,6 +18,9 @@ func (mdb *MongoDatabase) Get(id uuid.UUID) (*domain.Task, error) {
 	err := q.Decode(t)
 	if err != nil {
 		mdb.logger.Errorf("database.Get: mongo.Decode >> %v", err)
+		if err == mongo.ErrNoDocuments {
+			return nil, ErrNotFound
+		}
 		return nil, err
 	}
 
