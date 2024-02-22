@@ -2,7 +2,6 @@ package database
 
 import (
 	"context"
-	"errors"
 
 	"github.com/music-tribe/react-pairing-challenge/domain"
 	"github.com/music-tribe/uuid"
@@ -39,29 +38,6 @@ func OpenMongoConnection(url string, logger MongoDatabaseLogger) (*MongoDatabase
 func (mdb *MongoDatabase) CloseMongoConnection() error {
 	mdb.logger.Infof("CloseMongoConnection: MongoDB disconnected")
 	return mdb.client.Disconnect(context.TODO())
-}
-
-func (mdb *MongoDatabase) Add(task *domain.Task) error {
-	coll := mdb.client.Database("pair-challenge").Collection("tasks")
-
-	b, err := bson.Marshal(task)
-	if err != nil {
-		return err
-	}
-
-	_, err = coll.InsertOne(context.Background(), b)
-	if err != nil {
-		wrEx := mongo.WriteException{}
-		if errors.As(err, &wrEx) {
-			if wrEx.HasErrorCode(11000) {
-				return ErrDuplicate
-			}
-		}
-
-		return err
-	}
-
-	return nil
 }
 
 func (mdb *MongoDatabase) Get(id uuid.UUID) (*domain.Task, error) {
