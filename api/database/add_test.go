@@ -27,6 +27,10 @@ func TestMongoDatabase_Add(t *testing.T) {
 			Description: "exists",
 		}
 
+		t.Cleanup(func() {
+			_ = db.Delete(task.Id)
+		})
+
 		err := db.Add(&task)
 		assert.NoError(t, err)
 		err = db.Add(&task)
@@ -39,6 +43,10 @@ func TestMongoDatabase_Add(t *testing.T) {
 			Name:        "done",
 			Description: "exists",
 		}
+
+		t.Cleanup(func() {
+			_ = db.Delete(expect.Id)
+		})
 
 		err := db.Add(&expect)
 		assert.NoError(t, err)

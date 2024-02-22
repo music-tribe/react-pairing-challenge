@@ -33,6 +33,10 @@ func TestMongoDatabase_Get(t *testing.T) {
 			Description: "exists",
 		}
 
+		t.Cleanup(func() {
+			_ = db.Delete(expect.Id)
+		})
+
 		err := db.Add(&expect)
 		assert.NoError(t, err)
 
