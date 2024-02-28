@@ -21,7 +21,7 @@ func TestMongoDatabase_Get(t *testing.T) {
 	defer db.CloseMongoConnection()
 
 	t.Run("When the record can't be found, we should get an error", func(t *testing.T) {
-		task, err := db.Get(uuid.New())
+		task, err := db.Get(uuid.New(), uuid.New())
 		assert.ErrorIs(t, err, ErrNotFound)
 		assert.Nil(t, task)
 	})
@@ -29,6 +29,7 @@ func TestMongoDatabase_Get(t *testing.T) {
 	t.Run("When the task exists, we can retrieve it", func(t *testing.T) {
 		expect := domain.Task{
 			Id:          uuid.New(),
+			UserId:      uuid.New(),
 			Name:        "done",
 			Description: "exists",
 		}
@@ -40,7 +41,7 @@ func TestMongoDatabase_Get(t *testing.T) {
 		err := db.Add(&expect)
 		assert.NoError(t, err)
 
-		actual, err := db.Get(expect.Id)
+		actual, err := db.Get(expect.UserId, expect.Id)
 		assert.NoError(t, err)
 		assert.Equal(t, expect, *actual)
 	})

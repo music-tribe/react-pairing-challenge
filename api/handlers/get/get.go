@@ -12,10 +12,11 @@ import (
 
 //go:generate mockgen -destination=./mocks/get.go -package=getmocks -source=get.go
 type GetDatabase interface {
-	Get(id uuid.UUID) (*domain.Task, error)
+	Get(userId, taskId uuid.UUID) (*domain.Task, error)
 }
 
 type GetRequest struct {
+	UserId uuid.UUID `param:"userId" validate:"required"`
 	TaskId uuid.UUID `param:"taskId" validate:"required"`
 }
 
@@ -35,7 +36,7 @@ func Get(db GetDatabase) func(echo.Context) error {
 			return echo.NewHTTPError(http.StatusBadRequest, err)
 		}
 
-		task, err := db.Get(req.TaskId)
+		task, err := db.Get(req.UserId, req.TaskId)
 		if err != nil {
 			if err == database.ErrNotFound {
 				return echo.NewHTTPError(http.StatusNotFound, err)

@@ -51,7 +51,7 @@ func TestMongoDatabase_Add(t *testing.T) {
 		err := db.Add(&expect)
 		assert.NoError(t, err)
 
-		actual, err := db.Get(expect.Id)
+		actual, err := db.Get(expect.UserId, expect.Id)
 		assert.NoError(t, err)
 		assert.Equal(t, expect, *actual)
 	})

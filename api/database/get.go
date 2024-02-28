@@ -9,10 +9,10 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-func (mdb *MongoDatabase) Get(id uuid.UUID) (*domain.Task, error) {
+func (mdb *MongoDatabase) Get(userId, id uuid.UUID) (*domain.Task, error) {
 	coll := mdb.client.Database("pair-challenge").Collection("tasks")
 
-	q := coll.FindOne(context.Background(), bson.M{"_id": id})
+	q := coll.FindOne(context.Background(), bson.M{"_id": id, "userId": userId})
 
 	t := new(domain.Task)
 	err := q.Decode(t)

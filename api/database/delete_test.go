@@ -38,7 +38,7 @@ func TestMongoDatabase_Delete(t *testing.T) {
 		err = db.Delete(expect.Id)
 		assert.NoError(t, err)
 
-		_, err = db.Get(expect.Id)
+		_, err = db.Get(expect.UserId, expect.Id)
 		assert.ErrorIs(t, err, ErrNotFound)
 	})
 }

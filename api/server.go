@@ -25,7 +25,7 @@ func main() {
 	})
 
 	e.POST("/api/add/:userId", add.Add(db))
-	e.GET("/api/get/:taskId", get.Get(db))
+	e.GET("/api/get/:userId/:taskId", get.Get(db))
 
 	e.Logger.Fatal(e.Start(":8083"))
 }

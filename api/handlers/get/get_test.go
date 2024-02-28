@@ -25,6 +25,40 @@ func TestGet(t *testing.T) {
 		})
 	})
 
+	t.Run("when the userId is missing we should return a 400 error", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+		db := getmocks.NewMockGetDatabase(ctrl)
+
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		ctx := e.NewContext(req, rec)
+		ctx.SetParamNames("userId", "taskId")
+		ctx.SetParamValues("", uuid.New().String())
+
+		err := Get(db)(ctx)
+		assert.ErrorContains(t, err, "invalid UUID length: 0")
+		assert.Equal(t, http.StatusBadRequest, getStatusCode(rec, err))
+	})
+
+	t.Run("when the userId has a nil value we should return a 400 error", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+		db := getmocks.NewMockGetDatabase(ctrl)
+
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		ctx := e.NewContext(req, rec)
+		ctx.SetParamNames("userId", "taskId")
+		ctx.SetParamValues(uuid.Nil.String(), uuid.New().String())
+
+		err := Get(db)(ctx)
+		assert.ErrorContains(t, err, "Error:Field validation for 'UserId' failed on the 'required' tag")
+		assert.Equal(t, http.StatusBadRequest, getStatusCode(rec, err))
+	})
+
 	t.Run("when the id is missing we should return a 400 error", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
@@ -34,8 +68,8 @@ func TestGet(t *testing.T) {
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
 		ctx := e.NewContext(req, rec)
-		ctx.SetParamNames("taskId")
-		ctx.SetParamValues("")
+		ctx.SetParamNames("userId", "taskId")
+		ctx.SetParamValues(uuid.New().String(), "")
 
 		err := Get(db)(ctx)
 		assert.ErrorContains(t, err, "invalid UUID length: 0")
@@ -51,8 +85,8 @@ func TestGet(t *testing.T) {
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
 		ctx := e.NewContext(req, rec)
-		ctx.SetParamNames("taskId")
-		ctx.SetParamValues(uuid.Nil.String())
+		ctx.SetParamNames("userId", "taskId")
+		ctx.SetParamValues(uuid.New().String(), uuid.Nil.String())
 
 		err := Get(db)(ctx)
 		assert.ErrorContains(t, err, "Error:Field validation for 'TaskId' failed on the 'required' tag")
@@ -64,15 +98,16 @@ func TestGet(t *testing.T) {
 		defer ctrl.Finish()
 		db := getmocks.NewMockGetDatabase(ctrl)
 
+		userId := uuid.New()
 		id := uuid.New()
 		req := httptest.NewRequest(http.MethodGet, "/", nil)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
 		ctx := e.NewContext(req, rec)
-		ctx.SetParamNames("taskId")
-		ctx.SetParamValues(id.String())
+		ctx.SetParamNames("userId", "taskId")
+		ctx.SetParamValues(userId.String(), id.String())
 
-		db.EXPECT().Get(id).Return(nil, database.ErrNotFound)
+		db.EXPECT().Get(userId, id).Return(nil, database.ErrNotFound)
 
 		err := Get(db)(ctx)
 		assert.ErrorContains(t, err, database.ErrNotFound.Error())
@@ -84,15 +119,16 @@ func TestGet(t *testing.T) {
 		defer ctrl.Finish()
 		db := getmocks.NewMockGetDatabase(ctrl)
 
+		userId := uuid.New()
 		id := uuid.New()
 		req := httptest.NewRequest(http.MethodGet, "/", nil)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
 		ctx := e.NewContext(req, rec)
-		ctx.SetParamNames("taskId")
-		ctx.SetParamValues(id.String())
+		ctx.SetParamNames("userId", "taskId")
+		ctx.SetParamValues(userId.String(), id.String())
 
-		db.EXPECT().Get(id).Return(nil, errors.New("some error"))
+		db.EXPECT().Get(userId, id).Return(nil, errors.New("some error"))
 
 		err := Get(db)(ctx)
 		assert.ErrorContains(t, err, "some error")
@@ -104,21 +140,23 @@ func TestGet(t *testing.T) {
 		defer ctrl.Finish()
 		db := getmocks.NewMockGetDatabase(ctrl)
 
+		userId := uuid.New()
 		id := uuid.New()
 		req := httptest.NewRequest(http.MethodGet, "/", nil)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
 		ctx := e.NewContext(req, rec)
-		ctx.SetParamNames("taskId")
-		ctx.SetParamValues(id.String())
+		ctx.SetParamNames("userId", "taskId")
+		ctx.SetParamValues(userId.String(), id.String())
 
 		expectTask := domain.Task{
 			Id:          id,
+			UserId:      userId,
 			Name:        "blah",
 			Description: "is it done yet",
 		}
 
-		db.EXPECT().Get(id).Return(&expectTask, nil)
+		db.EXPECT().Get(userId, id).Return(&expectTask, nil)
 
 		err := Get(db)(ctx)
 		assert.NoError(t, err)
