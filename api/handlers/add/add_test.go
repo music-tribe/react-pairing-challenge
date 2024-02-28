@@ -26,6 +26,24 @@ func TestAdd(t *testing.T) {
 		})
 	})
 
+	t.Run("when the userId is missing we should return a 400 error", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+		db := addmocks.NewMockAddDatabase(ctrl)
+
+		byt := []byte(`{"name":"hello","description":"do something","completed":false}`)
+		req := httptest.NewRequest(http.MethodPost, "/", bytes.NewReader(byt))
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		ctx := e.NewContext(req, rec)
+		ctx.SetParamNames("userId")
+		ctx.SetParamValues("")
+
+		err := Add(db)(ctx)
+		assert.ErrorContains(t, err, "invalid UUID length: 0,")
+		assert.Equal(t, http.StatusBadRequest, getStatusCode(rec, err))
+	})
+
 	t.Run("when the task name is missing we should return a 400 error", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
@@ -36,6 +54,8 @@ func TestAdd(t *testing.T) {
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
 		ctx := e.NewContext(req, rec)
+		ctx.SetParamNames("userId")
+		ctx.SetParamValues(uuid.New().String())
 
 		err := Add(db)(ctx)
 		assert.ErrorContains(t, err, "Error:Field validation for 'Name' failed on the 'required' tag")
@@ -52,6 +72,8 @@ func TestAdd(t *testing.T) {
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
 		ctx := e.NewContext(req, rec)
+		ctx.SetParamNames("userId")
+		ctx.SetParamValues(uuid.New().String())
 
 		err := Add(db)(ctx)
 		assert.ErrorContains(t, err, "Error:Field validation for 'Description' failed on the 'required' tag")
@@ -64,14 +86,18 @@ func TestAdd(t *testing.T) {
 		db := addmocks.NewMockAddDatabase(ctrl)
 
 		id := uuid.New()
+		userId := uuid.New()
 		byt := []byte(`{"name":"hello","description":"do something", "id":"` + id.String() + `"}`)
 		req := httptest.NewRequest(http.MethodPost, "/", bytes.NewReader(byt))
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
 		ctx := e.NewContext(req, rec)
+		ctx.SetParamNames("userId")
+		ctx.SetParamValues(userId.String())
 
 		db.EXPECT().Add(&domain.Task{
 			Id:          id,
+			UserId:      userId,
 			Name:        "hello",
 			Description: "do something",
 			Completed:   false,
@@ -88,14 +114,18 @@ func TestAdd(t *testing.T) {
 		db := addmocks.NewMockAddDatabase(ctrl)
 
 		id := uuid.New()
+		userId := uuid.New()
 		byt := []byte(`{"name":"hello","description":"do something", "id":"` + id.String() + `"}`)
 		req := httptest.NewRequest(http.MethodPost, "/", bytes.NewReader(byt))
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
 		ctx := e.NewContext(req, rec)
+		ctx.SetParamNames("userId")
+		ctx.SetParamValues(userId.String())
 
 		db.EXPECT().Add(&domain.Task{
 			Id:          id,
+			UserId:      userId,
 			Name:        "hello",
 			Description: "do something",
 			Completed:   false,
@@ -111,15 +141,19 @@ func TestAdd(t *testing.T) {
 		defer ctrl.Finish()
 		db := addmocks.NewMockAddDatabase(ctrl)
 		id := uuid.New()
+		userId := uuid.New()
 
 		byt := []byte(`{"name":"hello","description":"do something", "id":"` + id.String() + `"}`)
 		req := httptest.NewRequest(http.MethodPost, "/", bytes.NewReader(byt))
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
 		ctx := e.NewContext(req, rec)
+		ctx.SetParamNames("userId")
+		ctx.SetParamValues(userId.String())
 
 		db.EXPECT().Add(&domain.Task{
 			Id:          id,
+			UserId:      userId,
 			Name:        "hello",
 			Description: "do something",
 			Completed:   false,

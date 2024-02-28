@@ -24,7 +24,7 @@ func main() {
 		return c.String(http.StatusOK, "I'm Alive!!!")
 	})
 
-	e.POST("/api/add", add.Add(db))
+	e.POST("/api/add/:userId", add.Add(db))
 	e.GET("/api/get/:taskId", get.Get(db))
 
 	e.Logger.Fatal(e.Start(":8083"))
