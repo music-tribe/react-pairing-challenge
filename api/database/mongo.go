@@ -24,6 +24,11 @@ func OpenMongoConnection(url string, logger MongoDatabaseLogger) (*MongoDatabase
 		return nil, err
 	}
 
+	if err := cli.Ping(context.Background(), nil); err != nil {
+		logger.Errorf("OpenMongoConnection: failed on ping to connection >> %v", err)
+		return nil, err
+	}
+
 	logger.Infof("OpenMongoConnection: MongoDB Connected")
 
 	return &MongoDatabase{
