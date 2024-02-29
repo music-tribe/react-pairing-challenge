@@ -1,0 +1,21 @@
+version: '3.7'
+services:
+  tasks-api:
+    build: .
+    ports:
+      - "8083:8083"
+    command: /tasks-api --reload
+    environment:
+      DB_URL: "mongodb://database:27017/pairing-challenge"
+    volumes:
+      - .:/app
+  database:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    restart: unless-stopped
+    volumes:
+      - mongodb_data_container:/data/db
+  
+volumes:
+  mongodb_data_container:

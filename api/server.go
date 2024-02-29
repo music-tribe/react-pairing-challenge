@@ -2,6 +2,7 @@ package main
 
 import (
 	"net/http"
+	"os"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -15,7 +16,7 @@ func main() {
 
 	e.Use(middleware.Recover())
 
-	db, err := database.OpenMongoConnection("mongodb://root:rootpassword@localhost:27017/admin", e.Logger)
+	db, err := database.OpenMongoConnection(os.Getenv("DB_URL"), e.Logger)
 	if err != nil {
 		e.Logger.Fatal(err)
 	}
