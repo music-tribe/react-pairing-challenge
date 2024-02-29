@@ -9,6 +9,7 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/labstack/echo/v4"
+	"github.com/music-tribe/react-pairing-challenge/database"
 	"github.com/music-tribe/react-pairing-challenge/domain"
 	getallmocks "github.com/music-tribe/react-pairing-challenge/handlers/getall/mocks"
 	"github.com/music-tribe/uuid"
@@ -24,7 +25,7 @@ func TestGetAll(t *testing.T) {
 		})
 	})
 
-	t.Run("when we getAll an unknown error from the db we should return a 500 error", func(t *testing.T) {
+	t.Run("when the userId is missing we should return a 400 error", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 		db := getallmocks.NewMockGetAllDatabase(ctrl)
@@ -32,8 +33,62 @@ func TestGetAll(t *testing.T) {
 		req := httptest.NewRequest(http.MethodGet, "/", nil)
 		rec := httptest.NewRecorder()
 		ctx := e.NewContext(req, rec)
+		ctx.SetParamNames("userId")
+		ctx.SetParamValues("")
 
-		db.EXPECT().GetAll().Return([]*domain.Task{}, errors.New("some error"))
+		err := GetAll(db)(ctx)
+		assert.ErrorContains(t, err, "message=invalid UUID length: 0")
+		assert.Equal(t, http.StatusBadRequest, getAllStatusCode(rec, err))
+	})
+
+	t.Run("when the userId has a nil value we should return a 400 error", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+		db := getallmocks.NewMockGetAllDatabase(ctrl)
+
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
+		rec := httptest.NewRecorder()
+		ctx := e.NewContext(req, rec)
+		ctx.SetParamNames("userId")
+		ctx.SetParamValues(uuid.Nil.String())
+
+		err := GetAll(db)(ctx)
+		assert.ErrorContains(t, err, "Error:Field validation for 'UserId' failed on the 'required' tag")
+		assert.Equal(t, http.StatusBadRequest, getAllStatusCode(rec, err))
+	})
+
+	t.Run("when the user can't be found in the db we should return a 404 error", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+		db := getallmocks.NewMockGetAllDatabase(ctrl)
+
+		userId := uuid.New()
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
+		rec := httptest.NewRecorder()
+		ctx := e.NewContext(req, rec)
+		ctx.SetParamNames("userId")
+		ctx.SetParamValues(userId.String())
+
+		db.EXPECT().GetAll(userId).Return([]*domain.Task{}, database.ErrNotFound)
+
+		err := GetAll(db)(ctx)
+		assert.ErrorContains(t, err, database.ErrNotFound.Error())
+		assert.Equal(t, http.StatusNotFound, getAllStatusCode(rec, err))
+	})
+
+	t.Run("when we getAll an unknown error from the db we should return a 500 error", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+		db := getallmocks.NewMockGetAllDatabase(ctrl)
+
+		userId := uuid.New()
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
+		rec := httptest.NewRecorder()
+		ctx := e.NewContext(req, rec)
+		ctx.SetParamNames("userId")
+		ctx.SetParamValues(userId.String())
+
+		db.EXPECT().GetAll(userId).Return([]*domain.Task{}, errors.New("some error"))
 
 		err := GetAll(db)(ctx)
 		assert.ErrorContains(t, err, "some error")
@@ -45,30 +100,35 @@ func TestGetAll(t *testing.T) {
 		defer ctrl.Finish()
 		db := getallmocks.NewMockGetAllDatabase(ctrl)
 
+		userId := uuid.New()
 		req := httptest.NewRequest(http.MethodGet, "/", nil)
-		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
 		ctx := e.NewContext(req, rec)
+		ctx.SetParamNames("userId")
+		ctx.SetParamValues(userId.String())
 
 		expectTasks := []*domain.Task{
 			{
 				Id:          uuid.New(),
+				UserId:      userId,
 				Name:        "one",
 				Description: "is it done yet",
 			},
 			{
 				Id:          uuid.New(),
+				UserId:      userId,
 				Name:        "two",
 				Description: "is it done yet",
 			},
 			{
 				Id:          uuid.New(),
+				UserId:      userId,
 				Name:        "three",
 				Description: "is it done yet",
 			},
 		}
 
-		db.EXPECT().GetAll().Return(expectTasks, nil)
+		db.EXPECT().GetAll(userId).Return(expectTasks, nil)
 
 		err := GetAll(db)(ctx)
 		assert.NoError(t, err)

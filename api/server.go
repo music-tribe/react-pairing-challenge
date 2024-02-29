@@ -9,6 +9,7 @@ import (
 	"github.com/music-tribe/react-pairing-challenge/database"
 	"github.com/music-tribe/react-pairing-challenge/handlers/add"
 	"github.com/music-tribe/react-pairing-challenge/handlers/get"
+	"github.com/music-tribe/react-pairing-challenge/handlers/getall"
 )
 
 func main() {
@@ -26,6 +27,7 @@ func main() {
 	})
 
 	e.POST("/api/add/:userId", add.Add(db))
+	e.GET("/api/get/:userId", getall.GetAll(db))
 	e.GET("/api/get/:userId/:taskId", get.Get(db))
 
 	e.Logger.Fatal(e.Start(":8083"))
