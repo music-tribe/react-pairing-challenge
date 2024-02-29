@@ -11,6 +11,4 @@ RUN CGO_ENABLED=0 GOOS=linux go build -o /tasks-api
 
 EXPOSE 8083
 
-RUN chmod +x tasks-api
-
 CMD ["/tasks-api" ]
