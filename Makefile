@@ -1,7 +1,7 @@
-start:
+start_with_logs:
 	docker compose -f api/docker-compose.yaml up
 
-start_no_logs:
+start:
 	docker compose -f api/docker-compose.yaml up -d --remove-orphans
 
 stop: 
