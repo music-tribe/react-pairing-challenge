@@ -20,7 +20,7 @@ func (mdb *MongoDatabase) GetAll(userId uuid.UUID) ([]*domain.Task, error) {
 	ts := make([]*domain.Task, 0)
 
 	if err = q.All(context.Background(), &ts); err != nil {
-		mdb.logger.Errorf("database.Get: mongo.Decode >> %v", err)
+		mdb.logger.Errorf("database.GetAll: mongo.All >> %v", err)
 		if err == mongo.ErrNoDocuments {
 			return nil, ErrNotFound
 		}

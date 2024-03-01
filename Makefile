@@ -6,3 +6,6 @@ start_no_logs:
 
 stop: 
 	docker compose -f api/docker-compose.yaml down
+
+build:
+	docker compose -f api/docker-compose.yaml build
