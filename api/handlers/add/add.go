@@ -19,6 +19,18 @@ type AddResponse struct {
 	Id uuid.UUID `json:"id"`
 }
 
+type Error echo.HTTPError
+
+// Status godoc
+// @Summary Add a new task for this user.
+// @Description Add a new task for this user id.
+// @Accept application/json
+// @Produce text/plain
+// @Router /api/:userId [post]
+// @Success 200 {object} AddResponse
+// @failure 400 {object} error
+// @failure 409 {object} error
+// @failure 500 {object} error
 func Add(db AddDatabase) func(echo.Context) error {
 	if db == nil {
 		panic("add.Add: db has nil value")

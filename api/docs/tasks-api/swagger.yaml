@@ -1,0 +1,54 @@
+basePath: /
+definitions:
+  add.AddResponse:
+    properties:
+      id:
+        type: string
+    type: object
+host: localhost:8083
+info:
+  contact:
+    email: cloud@musictribe.com
+    name: MCloud Team
+  description: This API allows you to create, get, alter and delete tasks.
+  title: tasks API
+  version: "1.0"
+paths:
+  /api/:userId:
+    post:
+      consumes:
+      - application/json
+      description: Add a new task for this user id.
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/add.AddResponse'
+        "400":
+          description: Bad Request
+          schema: {}
+        "409":
+          description: Conflict
+          schema: {}
+        "500":
+          description: Internal Server Error
+          schema: {}
+      summary: Add a new task for this user.
+  /status:
+    get:
+      consumes:
+      - '*/*'
+      description: get the status of server.
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: I'm Alive!!!
+          schema:
+            type: string
+      summary: Show if the server is alive.
+schemes:
+- http
+swagger: "2.0"
