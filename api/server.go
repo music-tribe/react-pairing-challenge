@@ -30,6 +30,7 @@ func main() {
 	e := echo.New()
 
 	e.Use(middleware.Recover())
+	e.Use(middleware.CORS())
 
 	db, err := database.OpenMongoConnection(os.Getenv("DB_URL"), e.Logger)
 	if err != nil {
