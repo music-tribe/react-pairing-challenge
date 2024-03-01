@@ -62,15 +62,19 @@ func TestUpdate(t *testing.T) {
 		defer ctrl.Finish()
 		db := updatemocks.NewMockUpdateDatabase(ctrl)
 
+		userId := uuid.New()
 		id := uuid.New()
 		byt := []byte(`{"name":"hello","description":"some description","completed":false, "id":"` + id.String() + `"}`)
 		req := httptest.NewRequest(http.MethodPut, "/", bytes.NewReader(byt))
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
 		ctx := e.NewContext(req, rec)
+		ctx.SetParamNames("userId")
+		ctx.SetParamValues(userId.String())
 
 		expectTask := &domain.Task{
 			Id:          id,
+			UserId:      userId,
 			Name:        "hello",
 			Description: "some description",
 		}
@@ -87,15 +91,19 @@ func TestUpdate(t *testing.T) {
 		defer ctrl.Finish()
 		db := updatemocks.NewMockUpdateDatabase(ctrl)
 
+		userId := uuid.New()
 		id := uuid.New()
 		byt := []byte(`{"name":"hello","description":"some description","completed":false, "id":"` + id.String() + `"}`)
 		req := httptest.NewRequest(http.MethodPut, "/", bytes.NewReader(byt))
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
 		ctx := e.NewContext(req, rec)
+		ctx.SetParamNames("userId")
+		ctx.SetParamValues(userId.String())
 
 		expectTask := &domain.Task{
 			Id:          id,
+			UserId:      userId,
 			Name:        "hello",
 			Description: "some description",
 		}
@@ -112,15 +120,19 @@ func TestUpdate(t *testing.T) {
 		defer ctrl.Finish()
 		db := updatemocks.NewMockUpdateDatabase(ctrl)
 
+		userId := uuid.New()
 		id := uuid.New()
 		byt := []byte(`{"name":"hello","description":"some description","completed":false, "id":"` + id.String() + `"}`)
 		req := httptest.NewRequest(http.MethodPut, "/", bytes.NewReader(byt))
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
 		ctx := e.NewContext(req, rec)
+		ctx.SetParamNames("userId")
+		ctx.SetParamValues(userId.String())
 
 		expectTask := &domain.Task{
 			Id:          id,
+			UserId:      userId,
 			Name:        "hello",
 			Description: "some description",
 		}
