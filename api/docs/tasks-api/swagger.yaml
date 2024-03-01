@@ -5,6 +5,23 @@ definitions:
       id:
         type: string
     type: object
+  domain.Task:
+    properties:
+      completed:
+        type: boolean
+      description:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      userId:
+        type: string
+    required:
+    - description
+    - name
+    - userId
+    type: object
 host: localhost:8083
 info:
   contact:
@@ -14,13 +31,54 @@ info:
   title: tasks API
   version: "1.0"
 paths:
-  /api/:userId:
+  /api/{userId}:
+    get:
+      consumes:
+      - application/json
+      description: Get a all tasks releted to this userId.
+      parameters:
+      - description: User UUID
+        in: path
+        name: userId
+        required: true
+        type: string
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.Task'
+            type: array
+        "400":
+          description: Bad Request
+          schema: {}
+        "404":
+          description: Not Found
+          schema: {}
+        "500":
+          description: Internal Server Error
+          schema: {}
+      summary: Get all of a users tasks.
     post:
       consumes:
       - application/json
       description: Add a new task for this user id.
+      parameters:
+      - description: Task
+        in: body
+        name: task
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Task'
+      - description: User UUID
+        in: path
+        name: userId
+        required: true
+        type: string
       produces:
-      - text/plain
+      - application/json
       responses:
         "200":
           description: OK
@@ -36,6 +94,104 @@ paths:
           description: Internal Server Error
           schema: {}
       summary: Add a new task for this user.
+    put:
+      consumes:
+      - application/json
+      description: Get a all tasks releted to this userId.
+      parameters:
+      - description: User UUID
+        in: path
+        name: userId
+        required: true
+        type: string
+      - description: Task
+        in: body
+        name: task
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Task'
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Task'
+        "400":
+          description: Bad Request
+          schema: {}
+        "404":
+          description: Not Found
+          schema: {}
+        "500":
+          description: Internal Server Error
+          schema: {}
+      summary: Get all of a users tasks.
+  /api/{userId}/{taskId}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete one of this users tasks.
+      parameters:
+      - description: User UUID
+        in: path
+        name: userId
+        required: true
+        type: string
+      - description: Task UUID
+        in: path
+        name: taskId
+        required: true
+        type: string
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: DELETED
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema: {}
+        "404":
+          description: Not Found
+          schema: {}
+        "500":
+          description: Internal Server Error
+          schema: {}
+      summary: Delete a users task.
+    get:
+      consumes:
+      - application/json
+      description: Get a task with matching task and user id.
+      parameters:
+      - description: User UUID
+        in: path
+        name: userId
+        required: true
+        type: string
+      - description: Task UUID
+        in: path
+        name: taskId
+        required: true
+        type: string
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Task'
+        "400":
+          description: Bad Request
+          schema: {}
+        "404":
+          description: Not Found
+          schema: {}
+        "500":
+          description: Internal Server Error
+          schema: {}
+      summary: Get a users task.
   /status:
     get:
       consumes:

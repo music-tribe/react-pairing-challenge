@@ -19,6 +19,17 @@ type GetAllRequest struct {
 	UserId uuid.UUID `param:"userId" validate:"required"`
 }
 
+// GetAll godoc
+// @Summary Get all of a users tasks.
+// @Description Get a all tasks releted to this userId.
+// @Accept application/json
+// @Produce text/plain
+// @Param userId path string true "User UUID"
+// @Router /api/{userId} [get]
+// @Success 200 {object} []domain.Task
+// @failure 400 {object} error
+// @failure 404 {object} error
+// @failure 500 {object} error
 func GetAll(db GetAllDatabase) func(echo.Context) error {
 	if db == nil {
 		panic("getAll.GetAll: db has nil value")

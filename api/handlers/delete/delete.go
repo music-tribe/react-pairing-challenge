@@ -19,6 +19,18 @@ type DeleteRequest struct {
 	TaskId uuid.UUID `param:"taskId" validate:"required"`
 }
 
+// Delete godoc
+// @Summary Delete a users task.
+// @Description Delete one of this users tasks.
+// @Accept application/json
+// @Produce text/plain
+// @Param userId path string true "User UUID"
+// @Param taskId path string true "Task UUID"
+// @Router /api/{userId}/{taskId} [delete]
+// @Success 200 {string} string "DELETED"
+// @failure 400 {object} error
+// @failure 404 {object} error
+// @failure 500 {object} error
 func Delete(db DeleteDatabase) func(echo.Context) error {
 	if db == nil {
 		panic("delete.Delete: db has nil value")

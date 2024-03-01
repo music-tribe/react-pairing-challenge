@@ -20,6 +20,18 @@ type GetRequest struct {
 	TaskId uuid.UUID `param:"taskId" validate:"required"`
 }
 
+// Get godoc
+// @Summary Get a users task.
+// @Description Get a task with matching task and user id.
+// @Accept application/json
+// @Produce text/plain
+// @Param userId path string true "User UUID"
+// @Param taskId path string true "Task UUID"
+// @Router /api/{userId}/{taskId} [get]
+// @Success 200 {object} domain.Task
+// @failure 400 {object} error
+// @failure 404 {object} error
+// @failure 500 {object} error
 func Get(db GetDatabase) func(echo.Context) error {
 	if db == nil {
 		panic("get.Get: db has nil value")

@@ -21,12 +21,14 @@ type AddResponse struct {
 
 type Error echo.HTTPError
 
-// Status godoc
+// Add godoc
 // @Summary Add a new task for this user.
 // @Description Add a new task for this user id.
 // @Accept application/json
-// @Produce text/plain
-// @Router /api/:userId [post]
+// @Produce application/json
+// @Param task body domain.Task true "Task"
+// @Param userId path string true "User UUID"
+// @Router /api/{userId} [post]
 // @Success 200 {object} AddResponse
 // @failure 400 {object} error
 // @failure 409 {object} error

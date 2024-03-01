@@ -14,6 +14,18 @@ type UpdateDatabase interface {
 	Update(task *domain.Task) error
 }
 
+// Update godoc
+// @Summary Get all of a users tasks.
+// @Description Get a all tasks releted to this userId.
+// @Accept application/json
+// @Produce text/plain
+// @Param userId path string true "User UUID"
+// @Param task body domain.Task true "Task"
+// @Router /api/{userId} [put]
+// @Success 200 {object} domain.Task
+// @failure 400 {object} error
+// @failure 404 {object} error
+// @failure 500 {object} error
 func Update(db UpdateDatabase) func(echo.Context) error {
 	if db == nil {
 		panic("update.Update: db has nil value")
