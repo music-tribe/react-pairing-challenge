@@ -21,13 +21,14 @@ func TestMongoDatabase_Delete(t *testing.T) {
 	defer db.CloseMongoConnection()
 
 	t.Run("When the record can't be found, we should get an error", func(t *testing.T) {
-		err := db.Delete(uuid.New())
+		err := db.Delete(uuid.New(), uuid.New())
 		assert.ErrorIs(t, err, ErrNotFound)
 	})
 
 	t.Run("When the task exists, we can delete it", func(t *testing.T) {
 		expect := domain.Task{
 			Id:          uuid.New(),
+			UserId:      uuid.New(),
 			Name:        "done",
 			Description: "exists",
 		}
@@ -35,7 +36,7 @@ func TestMongoDatabase_Delete(t *testing.T) {
 		err := db.Add(&expect)
 		assert.NoError(t, err)
 
-		err = db.Delete(expect.Id)
+		err = db.Delete(expect.UserId, expect.Id)
 		assert.NoError(t, err)
 
 		_, err = db.Get(expect.UserId, expect.Id)

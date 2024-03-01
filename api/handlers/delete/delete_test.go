@@ -32,8 +32,8 @@ func TestDelete(t *testing.T) {
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
 		ctx := e.NewContext(req, rec)
-		ctx.SetParamNames("taskId")
-		ctx.SetParamValues("")
+		ctx.SetParamNames("userId", "taskId")
+		ctx.SetParamValues(uuid.New().String(), "")
 
 		err := Delete(db)(ctx)
 		assert.ErrorContains(t, err, "invalid UUID length: 0")
@@ -49,8 +49,8 @@ func TestDelete(t *testing.T) {
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
 		ctx := e.NewContext(req, rec)
-		ctx.SetParamNames("taskId")
-		ctx.SetParamValues(uuid.Nil.String())
+		ctx.SetParamNames("userId", "taskId")
+		ctx.SetParamValues(uuid.New().String(), uuid.Nil.String())
 
 		err := Delete(db)(ctx)
 		assert.ErrorContains(t, err, "Error:Field validation for 'TaskId' failed on the 'required' tag")
@@ -62,15 +62,16 @@ func TestDelete(t *testing.T) {
 		defer ctrl.Finish()
 		db := deletemocks.NewMockDeleteDatabase(ctrl)
 
+		userId := uuid.New()
 		id := uuid.New()
 		req := httptest.NewRequest(http.MethodDelete, "/", nil)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
 		ctx := e.NewContext(req, rec)
-		ctx.SetParamNames("taskId")
-		ctx.SetParamValues(id.String())
+		ctx.SetParamNames("userId", "taskId")
+		ctx.SetParamValues(userId.String(), id.String())
 
-		db.EXPECT().Delete(id).Return(database.ErrNotFound)
+		db.EXPECT().Delete(userId, id).Return(database.ErrNotFound)
 
 		err := Delete(db)(ctx)
 		assert.ErrorContains(t, err, database.ErrNotFound.Error())
@@ -82,15 +83,16 @@ func TestDelete(t *testing.T) {
 		defer ctrl.Finish()
 		db := deletemocks.NewMockDeleteDatabase(ctrl)
 
+		userId := uuid.New()
 		id := uuid.New()
 		req := httptest.NewRequest(http.MethodDelete, "/", nil)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
 		ctx := e.NewContext(req, rec)
-		ctx.SetParamNames("taskId")
-		ctx.SetParamValues(id.String())
+		ctx.SetParamNames("userId", "taskId")
+		ctx.SetParamValues(userId.String(), id.String())
 
-		db.EXPECT().Delete(id).Return(errors.New("some error"))
+		db.EXPECT().Delete(userId, id).Return(errors.New("some error"))
 
 		err := Delete(db)(ctx)
 		assert.ErrorContains(t, err, "some error")
@@ -102,15 +104,16 @@ func TestDelete(t *testing.T) {
 		defer ctrl.Finish()
 		db := deletemocks.NewMockDeleteDatabase(ctrl)
 
+		userId := uuid.New()
 		id := uuid.New()
 		req := httptest.NewRequest(http.MethodDelete, "/", nil)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
 		ctx := e.NewContext(req, rec)
-		ctx.SetParamNames("taskId")
-		ctx.SetParamValues(id.String())
+		ctx.SetParamNames("userId", "taskId")
+		ctx.SetParamValues(userId.String(), id.String())
 
-		db.EXPECT().Delete(id).Return(nil)
+		db.EXPECT().Delete(userId, id).Return(nil)
 
 		err := Delete(db)(ctx)
 		assert.NoError(t, err)

@@ -28,7 +28,7 @@ func TestMongoDatabase_Add(t *testing.T) {
 		}
 
 		t.Cleanup(func() {
-			_ = db.Delete(task.Id)
+			_ = db.Delete(task.UserId, task.Id)
 		})
 
 		err := db.Add(&task)
@@ -45,7 +45,7 @@ func TestMongoDatabase_Add(t *testing.T) {
 		}
 
 		t.Cleanup(func() {
-			_ = db.Delete(expect.Id)
+			_ = db.Delete(expect.UserId, expect.Id)
 		})
 
 		err := db.Add(&expect)

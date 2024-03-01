@@ -35,7 +35,7 @@ func TestMongoDatabase_Get(t *testing.T) {
 		}
 
 		t.Cleanup(func() {
-			_ = db.Delete(expect.Id)
+			_ = db.Delete(expect.UserId, expect.Id)
 		})
 
 		err := db.Add(&expect)

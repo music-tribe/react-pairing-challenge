@@ -11,10 +11,11 @@ import (
 
 //go:generate mockgen -destination=./mocks/delete.go -package=deletemocks -source=delete.go
 type DeleteDatabase interface {
-	Delete(id uuid.UUID) error
+	Delete(userId, taksId uuid.UUID) error
 }
 
 type DeleteRequest struct {
+	UserId uuid.UUID `param:"userId" validate:"required"`
 	TaskId uuid.UUID `param:"taskId" validate:"required"`
 }
 
@@ -34,7 +35,7 @@ func Delete(db DeleteDatabase) func(echo.Context) error {
 			return echo.NewHTTPError(http.StatusBadRequest, err)
 		}
 
-		err := db.Delete(req.TaskId)
+		err := db.Delete(req.UserId, req.TaskId)
 		if err != nil {
 			if err == database.ErrNotFound {
 				return echo.NewHTTPError(http.StatusNotFound, err)
