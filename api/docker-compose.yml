@@ -1,9 +1,10 @@
 version: '3.7'
 services:
   features-api:
+    # image: "acrpairingchallenge.azurecr.io/api-features-api:latest"
     build: .
     ports:
-      - "8083:8083"
+      - "80:8083"
     command: /features-api --reload
     environment:
       DB_URL: "mongodb://database:27017/pairing-challenge"
