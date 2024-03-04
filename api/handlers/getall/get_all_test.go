@@ -69,7 +69,7 @@ func TestGetAll(t *testing.T) {
 		ctx.SetParamNames("userId")
 		ctx.SetParamValues(userId.String())
 
-		db.EXPECT().GetAll(userId).Return([]*domain.Task{}, database.ErrNotFound)
+		db.EXPECT().GetAll(userId).Return([]*domain.Feature{}, database.ErrNotFound)
 
 		err := GetAll(db)(ctx)
 		assert.ErrorContains(t, err, database.ErrNotFound.Error())
@@ -88,14 +88,14 @@ func TestGetAll(t *testing.T) {
 		ctx.SetParamNames("userId")
 		ctx.SetParamValues(userId.String())
 
-		db.EXPECT().GetAll(userId).Return([]*domain.Task{}, errors.New("some error"))
+		db.EXPECT().GetAll(userId).Return([]*domain.Feature{}, errors.New("some error"))
 
 		err := GetAll(db)(ctx)
 		assert.ErrorContains(t, err, "some error")
 		assert.Equal(t, http.StatusInternalServerError, getAllStatusCode(rec, err))
 	})
 
-	t.Run("when the request is well formed, we should getAll the task back and no error", func(t *testing.T) {
+	t.Run("when the request is well formed, we should getAll the feature back and no error", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 		db := getallmocks.NewMockGetAllDatabase(ctrl)
@@ -107,7 +107,7 @@ func TestGetAll(t *testing.T) {
 		ctx.SetParamNames("userId")
 		ctx.SetParamValues(userId.String())
 
-		expectTasks := []*domain.Task{
+		expectfeatures := []*domain.Feature{
 			{
 				Id:          uuid.New(),
 				UserId:      userId,
@@ -128,16 +128,16 @@ func TestGetAll(t *testing.T) {
 			},
 		}
 
-		db.EXPECT().GetAll(userId).Return(expectTasks, nil)
+		db.EXPECT().GetAll(userId).Return(expectfeatures, nil)
 
 		err := GetAll(db)(ctx)
 		assert.NoError(t, err)
 		assert.Equal(t, http.StatusOK, getAllStatusCode(rec, err))
 
-		actualTasks := make([]*domain.Task, 0)
-		err = json.Unmarshal(rec.Body.Bytes(), &actualTasks)
+		actualfeatures := make([]*domain.Feature, 0)
+		err = json.Unmarshal(rec.Body.Bytes(), &actualfeatures)
 		assert.NoError(t, err)
-		assert.Equal(t, expectTasks, actualTasks)
+		assert.Equal(t, expectfeatures, actualfeatures)
 	})
 }
 

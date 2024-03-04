@@ -21,24 +21,24 @@ func TestMongoDatabase_Add(t *testing.T) {
 	defer db.CloseMongoConnection()
 
 	t.Run("When the record already exists, we should get an error", func(t *testing.T) {
-		task := domain.Task{
+		feature := domain.Feature{
 			Id:          uuid.New(),
 			Name:        "done",
 			Description: "exists",
 		}
 
 		t.Cleanup(func() {
-			_ = db.Delete(task.UserId, task.Id)
+			_ = db.Delete(feature.UserId, feature.Id)
 		})
 
-		err := db.Add(&task)
+		err := db.Add(&feature)
 		assert.NoError(t, err)
-		err = db.Add(&task)
+		err = db.Add(&feature)
 		assert.ErrorIs(t, err, ErrDuplicate)
 	})
 
-	t.Run("When we add a task, we can retrieve it", func(t *testing.T) {
-		expect := domain.Task{
+	t.Run("When we add a feature, we can retrieve it", func(t *testing.T) {
+		expect := domain.Feature{
 			Id:          uuid.New(),
 			Name:        "done",
 			Description: "exists",

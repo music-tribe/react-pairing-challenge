@@ -44,7 +44,7 @@ func TestAdd(t *testing.T) {
 		assert.Equal(t, http.StatusBadRequest, getStatusCode(rec, err))
 	})
 
-	t.Run("when the task name is missing we should return a 400 error", func(t *testing.T) {
+	t.Run("when the feature name is missing we should return a 400 error", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 		db := addmocks.NewMockAddDatabase(ctrl)
@@ -62,7 +62,7 @@ func TestAdd(t *testing.T) {
 		assert.Equal(t, http.StatusBadRequest, getStatusCode(rec, err))
 	})
 
-	t.Run("when the task description is missing we should return a 400 error", func(t *testing.T) {
+	t.Run("when the feature description is missing we should return a 400 error", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 		db := addmocks.NewMockAddDatabase(ctrl)
@@ -95,7 +95,7 @@ func TestAdd(t *testing.T) {
 		ctx.SetParamNames("userId")
 		ctx.SetParamValues(userId.String())
 
-		db.EXPECT().Add(&domain.Task{
+		db.EXPECT().Add(&domain.Feature{
 			Id:          id,
 			UserId:      userId,
 			Name:        "hello",
@@ -123,7 +123,7 @@ func TestAdd(t *testing.T) {
 		ctx.SetParamNames("userId")
 		ctx.SetParamValues(userId.String())
 
-		db.EXPECT().Add(&domain.Task{
+		db.EXPECT().Add(&domain.Feature{
 			Id:          id,
 			UserId:      userId,
 			Name:        "hello",
@@ -151,7 +151,7 @@ func TestAdd(t *testing.T) {
 		ctx.SetParamNames("userId")
 		ctx.SetParamValues(userId.String())
 
-		db.EXPECT().Add(&domain.Task{
+		db.EXPECT().Add(&domain.Feature{
 			Id:          id,
 			UserId:      userId,
 			Name:        "hello",

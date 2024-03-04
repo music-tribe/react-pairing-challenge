@@ -25,8 +25,8 @@ func TestMongoDatabase_Delete(t *testing.T) {
 		assert.ErrorIs(t, err, ErrNotFound)
 	})
 
-	t.Run("When the task exists, we can delete it", func(t *testing.T) {
-		expect := domain.Task{
+	t.Run("When the feature exists, we can delete it", func(t *testing.T) {
+		expect := domain.Feature{
 			Id:          uuid.New(),
 			UserId:      uuid.New(),
 			Name:        "done",

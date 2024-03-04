@@ -12,7 +12,7 @@ import (
 
 //go:generate mockgen -destination=./mocks/get_all.go -package=getallmocks -source=get_all.go
 type GetAllDatabase interface {
-	GetAll(userId uuid.UUID) ([]*domain.Task, error)
+	GetAll(userId uuid.UUID) ([]*domain.Feature, error)
 }
 
 type GetAllRequest struct {
@@ -20,13 +20,13 @@ type GetAllRequest struct {
 }
 
 // GetAll godoc
-// @Summary Get all of a users tasks.
-// @Description Get a all tasks releted to this userId.
+// @Summary Get all of a users features.
+// @Description Get a all features releted to this userId.
 // @Accept application/json
 // @Produce text/plain
 // @Param userId path string true "User UUID"
 // @Router /api/{userId} [get]
-// @Success 200 {object} []domain.Task
+// @Success 200 {object} []domain.Feature
 // @failure 400 {object} error
 // @failure 404 {object} error
 // @failure 500 {object} error
@@ -46,7 +46,7 @@ func GetAll(db GetAllDatabase) func(echo.Context) error {
 			return echo.NewHTTPError(http.StatusBadRequest, err)
 		}
 
-		tasks, err := db.GetAll(req.UserId)
+		features, err := db.GetAll(req.UserId)
 		if err != nil {
 			if err == database.ErrNotFound {
 				return echo.NewHTTPError(http.StatusNotFound, err)
@@ -54,6 +54,6 @@ func GetAll(db GetAllDatabase) func(echo.Context) error {
 			return echo.NewHTTPError(http.StatusInternalServerError, err)
 		}
 
-		return c.JSON(http.StatusOK, tasks)
+		return c.JSON(http.StatusOK, features)
 	}
 }

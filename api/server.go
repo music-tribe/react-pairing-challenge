@@ -7,7 +7,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/music-tribe/react-pairing-challenge/database"
-	_ "github.com/music-tribe/react-pairing-challenge/docs/tasks-api"
+	_ "github.com/music-tribe/react-pairing-challenge/docs/features-api"
 	"github.com/music-tribe/react-pairing-challenge/handlers/add"
 	"github.com/music-tribe/react-pairing-challenge/handlers/delete"
 	"github.com/music-tribe/react-pairing-challenge/handlers/get"
@@ -16,9 +16,9 @@ import (
 	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
-// @title tasks API
+// @title features API
 // @version 1.0
-// @description This API allows you to create, get, alter and delete tasks.
+// @description This API allows you to create, get, alter and delete features.
 
 // @contact.name MCloud Team
 // @contact.email cloud@musictribe.com
@@ -43,8 +43,8 @@ func main() {
 	grp.POST("/:userId", add.Add(db))
 	grp.GET("/:userId", getall.GetAll(db))
 	grp.PUT("/:userId", update.Update(db))
-	grp.GET("/:userId/:taskId", get.Get(db))
-	grp.DELETE("/:userId/:taskId", delete.Delete(db))
+	grp.GET("/:userId/:featureId", get.Get(db))
+	grp.DELETE("/:userId/:featureId", delete.Delete(db))
 
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 

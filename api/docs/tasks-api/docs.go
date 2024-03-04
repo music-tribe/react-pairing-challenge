@@ -20,14 +20,14 @@ const docTemplate = `{
     "paths": {
         "/api/{userId}": {
             "get": {
-                "description": "Get a all tasks releted to this userId.",
+                "description": "Get a all features releted to this userId.",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "text/plain"
                 ],
-                "summary": "Get all of a users tasks.",
+                "summary": "Get all of a users features.",
                 "parameters": [
                     {
                         "type": "string",
@@ -43,7 +43,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/domain.Task"
+                                "$ref": "#/definitions/domain.Feature"
                             }
                         }
                     },
@@ -62,14 +62,14 @@ const docTemplate = `{
                 }
             },
             "put": {
-                "description": "Get a all tasks releted to this userId.",
+                "description": "Get a all features releted to this userId.",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "text/plain"
                 ],
-                "summary": "Get all of a users tasks.",
+                "summary": "Get all of a users features.",
                 "parameters": [
                     {
                         "type": "string",
@@ -79,12 +79,12 @@ const docTemplate = `{
                         "required": true
                     },
                     {
-                        "description": "Task",
-                        "name": "task",
+                        "description": "Feature",
+                        "name": "feature",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/domain.Task"
+                            "$ref": "#/definitions/domain.Feature"
                         }
                     }
                 ],
@@ -92,7 +92,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/domain.Task"
+                            "$ref": "#/definitions/domain.Feature"
                         }
                     },
                     "400": {
@@ -110,22 +110,22 @@ const docTemplate = `{
                 }
             },
             "post": {
-                "description": "Add a new task for this user id.",
+                "description": "Add a new feature for this user id.",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Add a new task for this user.",
+                "summary": "Add a new feature for this user.",
                 "parameters": [
                     {
-                        "description": "Task",
-                        "name": "task",
+                        "description": "Feature",
+                        "name": "feature",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/domain.Task"
+                            "$ref": "#/definitions/domain.Feature"
                         }
                     },
                     {
@@ -158,16 +158,16 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/{userId}/{taskId}": {
+        "/api/{userId}/{featureId}": {
             "get": {
-                "description": "Get a task with matching task and user id.",
+                "description": "Get a feature with matching feature and user id.",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "text/plain"
                 ],
-                "summary": "Get a users task.",
+                "summary": "Get a users feature.",
                 "parameters": [
                     {
                         "type": "string",
@@ -178,8 +178,8 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "description": "Task UUID",
-                        "name": "taskId",
+                        "description": "Feature UUID",
+                        "name": "featureId",
                         "in": "path",
                         "required": true
                     }
@@ -188,7 +188,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/domain.Task"
+                            "$ref": "#/definitions/domain.Feature"
                         }
                     },
                     "400": {
@@ -206,14 +206,14 @@ const docTemplate = `{
                 }
             },
             "delete": {
-                "description": "Delete one of this users tasks.",
+                "description": "Delete one of this users features.",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "text/plain"
                 ],
-                "summary": "Delete a users task.",
+                "summary": "Delete a users feature.",
                 "parameters": [
                     {
                         "type": "string",
@@ -224,8 +224,8 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "description": "Task UUID",
-                        "name": "taskId",
+                        "description": "Feature UUID",
+                        "name": "featureId",
                         "in": "path",
                         "required": true
                     }
@@ -282,7 +282,7 @@ const docTemplate = `{
                 }
             }
         },
-        "domain.Task": {
+        "domain.Feature": {
             "type": "object",
             "required": [
                 "description",
@@ -316,8 +316,8 @@ var SwaggerInfo = &swag.Spec{
 	Host:             "localhost:8083",
 	BasePath:         "/",
 	Schemes:          []string{"http"},
-	Title:            "tasks API",
-	Description:      "This API allows you to create, get, alter and delete tasks.",
+	Title:            "features API",
+	Description:      "This API allows you to create, get, alter and delete features.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",

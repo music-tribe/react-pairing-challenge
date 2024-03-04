@@ -9,10 +9,10 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-func (mdb *MongoDatabase) Add(task *domain.Task) error {
-	coll := mdb.client.Database("pair-challenge").Collection("tasks")
+func (mdb *MongoDatabase) Add(feature *domain.Feature) error {
+	coll := mdb.client.Database("pair-challenge").Collection("features")
 
-	b, err := bson.Marshal(task)
+	b, err := bson.Marshal(feature)
 	if err != nil {
 		mdb.logger.Errorf("database.Add: bson.Marshal >> %v", err)
 		return err

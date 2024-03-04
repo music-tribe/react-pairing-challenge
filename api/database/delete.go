@@ -7,10 +7,10 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-func (mdb *MongoDatabase) Delete(userId, taskId uuid.UUID) error {
-	coll := mdb.client.Database("pair-challenge").Collection("tasks")
+func (mdb *MongoDatabase) Delete(userId, featureId uuid.UUID) error {
+	coll := mdb.client.Database("pair-challenge").Collection("features")
 
-	res, err := coll.DeleteOne(context.Background(), bson.M{"_id": taskId, "userId": userId})
+	res, err := coll.DeleteOne(context.Background(), bson.M{"_id": featureId, "userId": userId})
 	if err != nil {
 		mdb.logger.Errorf("database.Delete: mongo.DeleteOne >> %v", err)
 		return err

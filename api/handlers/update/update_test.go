@@ -25,7 +25,7 @@ func TestUpdate(t *testing.T) {
 		})
 	})
 
-	t.Run("when the task name is missing we should return a 400 error", func(t *testing.T) {
+	t.Run("when the feature name is missing we should return a 400 error", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 		db := updatemocks.NewMockUpdateDatabase(ctrl)
@@ -41,7 +41,7 @@ func TestUpdate(t *testing.T) {
 		assert.Equal(t, http.StatusBadRequest, updateStatusCode(rec, err))
 	})
 
-	t.Run("when the task description is missing we should return a 400 error", func(t *testing.T) {
+	t.Run("when the feature description is missing we should return a 400 error", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 		db := updatemocks.NewMockUpdateDatabase(ctrl)
@@ -72,14 +72,14 @@ func TestUpdate(t *testing.T) {
 		ctx.SetParamNames("userId")
 		ctx.SetParamValues(userId.String())
 
-		expectTask := &domain.Task{
+		expectfeature := &domain.Feature{
 			Id:          id,
 			UserId:      userId,
 			Name:        "hello",
 			Description: "some description",
 		}
 
-		db.EXPECT().Update(expectTask).Return(database.ErrNotFound)
+		db.EXPECT().Update(expectfeature).Return(database.ErrNotFound)
 
 		err := Update(db)(ctx)
 		assert.ErrorContains(t, err, database.ErrNotFound.Error())
@@ -101,14 +101,14 @@ func TestUpdate(t *testing.T) {
 		ctx.SetParamNames("userId")
 		ctx.SetParamValues(userId.String())
 
-		expectTask := &domain.Task{
+		expectfeature := &domain.Feature{
 			Id:          id,
 			UserId:      userId,
 			Name:        "hello",
 			Description: "some description",
 		}
 
-		db.EXPECT().Update(expectTask).Return(errors.New("some error"))
+		db.EXPECT().Update(expectfeature).Return(errors.New("some error"))
 
 		err := Update(db)(ctx)
 		assert.ErrorContains(t, err, "some error")
@@ -130,14 +130,14 @@ func TestUpdate(t *testing.T) {
 		ctx.SetParamNames("userId")
 		ctx.SetParamValues(userId.String())
 
-		expectTask := &domain.Task{
+		expectfeature := &domain.Feature{
 			Id:          id,
 			UserId:      userId,
 			Name:        "hello",
 			Description: "some description",
 		}
 
-		db.EXPECT().Update(expectTask).Return(nil)
+		db.EXPECT().Update(expectfeature).Return(nil)
 
 		err := Update(db)(ctx)
 		assert.NoError(t, err)
