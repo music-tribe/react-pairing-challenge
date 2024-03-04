@@ -290,9 +290,6 @@ const docTemplate = `{
                 "userId"
             ],
             "properties": {
-                "completed": {
-                    "type": "boolean"
-                },
                 "description": {
                     "type": "string"
                 },
@@ -304,6 +301,12 @@ const docTemplate = `{
                 },
                 "userId": {
                     "type": "string"
+                },
+                "votes": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 }
             }
         }

@@ -7,8 +7,6 @@ definitions:
     type: object
   domain.Feature:
     properties:
-      completed:
-        type: boolean
       description:
         type: string
       id:
@@ -17,6 +15,10 @@ definitions:
         type: string
       userId:
         type: string
+      votes:
+        items:
+          type: string
+        type: array
     required:
     - description
     - name

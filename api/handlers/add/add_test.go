@@ -31,7 +31,7 @@ func TestAdd(t *testing.T) {
 		defer ctrl.Finish()
 		db := addmocks.NewMockAddDatabase(ctrl)
 
-		byt := []byte(`{"name":"hello","description":"do something","completed":false}`)
+		byt := []byte(`{"name":"hello","description":"do something","votes":[]}`)
 		req := httptest.NewRequest(http.MethodPost, "/", bytes.NewReader(byt))
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
@@ -49,7 +49,7 @@ func TestAdd(t *testing.T) {
 		defer ctrl.Finish()
 		db := addmocks.NewMockAddDatabase(ctrl)
 
-		byt := []byte(`{"name":"","description":"do something","completed":false}`)
+		byt := []byte(`{"name":"","description":"do something","votes":[]}`)
 		req := httptest.NewRequest(http.MethodPost, "/", bytes.NewReader(byt))
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
@@ -67,7 +67,7 @@ func TestAdd(t *testing.T) {
 		defer ctrl.Finish()
 		db := addmocks.NewMockAddDatabase(ctrl)
 
-		byt := []byte(`{"name":"hello","description":"","completed":false}`)
+		byt := []byte(`{"name":"hello","description":"","votes":[]}`)
 		req := httptest.NewRequest(http.MethodPost, "/", bytes.NewReader(byt))
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
@@ -100,7 +100,6 @@ func TestAdd(t *testing.T) {
 			UserId:      userId,
 			Name:        "hello",
 			Description: "do something",
-			Completed:   false,
 		}).Return(database.ErrDuplicate)
 
 		err := Add(db)(ctx)
@@ -128,7 +127,6 @@ func TestAdd(t *testing.T) {
 			UserId:      userId,
 			Name:        "hello",
 			Description: "do something",
-			Completed:   false,
 		}).Return(errors.New("some error"))
 
 		err := Add(db)(ctx)
@@ -156,7 +154,44 @@ func TestAdd(t *testing.T) {
 			UserId:      userId,
 			Name:        "hello",
 			Description: "do something",
-			Completed:   false,
+		}).Return(nil)
+
+		err := Add(db)(ctx)
+		assert.NoError(t, err)
+		assert.Equal(t, http.StatusCreated, getStatusCode(rec, err))
+
+		ar := new(AddResponse)
+		err = json.Unmarshal(rec.Body.Bytes(), ar)
+		assert.NoError(t, err)
+		assert.Equal(t, id, ar.Id)
+	})
+
+	t.Run("when the votes are added on creation, we should see them bound to the Feature object", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+		db := addmocks.NewMockAddDatabase(ctrl)
+		id := uuid.New()
+		userId := uuid.New()
+
+		byt := []byte(`{"name":"hello","description":"do something", "votes":["aa9f9cfd-efb4-4931-82a0-59e66140a365", "197f2c81-c786-4c00-b4d0-13d9a1c02a3e"], "id":"` + id.String() + `"}`)
+		req := httptest.NewRequest(http.MethodPost, "/", bytes.NewReader(byt))
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		ctx := e.NewContext(req, rec)
+		ctx.SetParamNames("userId")
+		ctx.SetParamValues(userId.String())
+
+		vote1, _ := uuid.Parse("aa9f9cfd-efb4-4931-82a0-59e66140a365")
+		vote2, _ := uuid.Parse("197f2c81-c786-4c00-b4d0-13d9a1c02a3e")
+
+		db.EXPECT().Add(&domain.Feature{
+			Id:          id,
+			UserId:      userId,
+			Name:        "hello",
+			Description: "do something",
+			Votes: []uuid.UUID{
+				vote1, vote2,
+			},
 		}).Return(nil)
 
 		err := Add(db)(ctx)
