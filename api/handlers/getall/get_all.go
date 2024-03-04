@@ -16,7 +16,7 @@ type GetAllDatabase interface {
 }
 
 type GetAllRequest struct {
-	UserId uuid.UUID `param:"userId" validate:"required"`
+	UserId uuid.UUID `param:"userId" validate:"required" example:"ef2a27c4-b03d-4190-86f2-b1dc2538243e"`
 }
 
 // GetAll godoc

@@ -15,18 +15,24 @@ type AddDatabase interface {
 	Add(feature *domain.Feature) error
 }
 
+type AddRequest struct {
+	Id          uuid.UUID   `json:"-" bson:"_id"`
+	UserId      uuid.UUID   `json:"userId" param:"userId" bson:"userId" validate:"required" example:"202c25c4-b2ce-4514-9045-890a1aa896ea"`
+	Name        string      `json:"name" validate:"required" example:"My New Feature Request"`
+	Description string      `json:"description" validate:"required" example:"Could we have this new feature please?"`
+	Votes       []uuid.UUID `json:"votes" example:"['155dccaa-0299-4018-ab6b-90b9ee448943','ef2a27c4-b03d-4190-86f2-b1dc2538243e']"`
+}
+
 type AddResponse struct {
 	Id uuid.UUID `json:"id"`
 }
-
-type Error echo.HTTPError
 
 // Add godoc
 // @Summary Add a new feature for this user.
 // @Description Add a new feature for this user id.
 // @Accept application/json
 // @Produce application/json
-// @Param feature body domain.Feature true "Feature"
+// @Param feature body AddRequest true "Feature"
 // @Param userId path string true "User UUID"
 // @Router /api/{userId} [post]
 // @Success 200 {object} AddResponse

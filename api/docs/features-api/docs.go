@@ -179,7 +179,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/domain.Feature"
+                            "$ref": "#/definitions/add.AddRequest"
                         }
                     },
                     {
@@ -328,6 +328,38 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "add.AddRequest": {
+            "type": "object",
+            "required": [
+                "description",
+                "name",
+                "userId"
+            ],
+            "properties": {
+                "description": {
+                    "type": "string",
+                    "example": "Could we have this new feature please?"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "My New Feature Request"
+                },
+                "userId": {
+                    "type": "string",
+                    "example": "202c25c4-b2ce-4514-9045-890a1aa896ea"
+                },
+                "votes": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "example": [
+                        "['155dccaa-0299-4018-ab6b-90b9ee448943'",
+                        "'ef2a27c4-b03d-4190-86f2-b1dc2538243e']"
+                    ]
+                }
+            }
+        },
         "add.AddResponse": {
             "type": "object",
             "properties": {
@@ -345,22 +377,30 @@ const docTemplate = `{
             ],
             "properties": {
                 "description": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Could we have this new feature please?"
                 },
                 "id": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "f6e7f8c4-3af6-4028-ac7c-30c9d79a3fa7"
                 },
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "My New Feature Request"
                 },
                 "userId": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "effe01ec-7f09-4a1c-9453-794212a8ac26"
                 },
                 "votes": {
                     "type": "array",
                     "items": {
                         "type": "string"
-                    }
+                    },
+                    "example": [
+                        "['155dccaa-0299-4018-ab6b-90b9ee448943'",
+                        "'ef2a27c4-b03d-4190-86f2-b1dc2538243e']"
+                    ]
                 }
             }
         },

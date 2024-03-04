@@ -15,8 +15,8 @@ type DeleteDatabase interface {
 }
 
 type DeleteRequest struct {
-	UserId    uuid.UUID `param:"userId" validate:"required"`
-	FeatureId uuid.UUID `param:"featureId" validate:"required"`
+	UserId    uuid.UUID `param:"userId" validate:"required" example:"ef2a27c4-b03d-4190-86f2-b1dc2538243e"`
+	FeatureId uuid.UUID `param:"featureId" validate:"required" example:"202c25c4-b2ce-4514-9045-890a1aa896ea"`
 }
 
 // Delete godoc
