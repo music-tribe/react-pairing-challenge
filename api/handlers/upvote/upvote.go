@@ -12,8 +12,8 @@ import (
 )
 
 var (
-	errVotedForOwnFeature = errors.New("Upvote: this user is attempting to vote for their own feature")
-	errVoteAlreadyCounted = errors.New("Upvote: this user has already voted for the feature")
+	errVotedForOwnFeature = errors.New("sorry, you aren't allowed to vote for your own feature request")
+	errVoteAlreadyCounted = errors.New("you've already voted for this feature request")
 )
 
 //go:generate mockgen -destination=./mocks/upvote.go -package=upvotemocks -source=upvote.go
