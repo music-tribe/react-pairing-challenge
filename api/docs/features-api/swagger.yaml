@@ -24,6 +24,23 @@ definitions:
     - name
     - userId
     type: object
+  upvote.UpvoteRequest:
+    properties:
+      userId:
+        example: 202c25c4-b2ce-4514-9045-890a1aa896ea
+        type: string
+    required:
+    - userId
+    type: object
+  upvote.UpvoteResponse:
+    properties:
+      featureId:
+        example: b1f01569-ecff-4c60-a716-435b2e51f1ff
+        type: string
+      voteCount:
+        example: 45928
+        type: integer
+    type: object
 host: localhost:8083
 info:
   contact:
@@ -194,6 +211,44 @@ paths:
           description: Internal Server Error
           schema: {}
       summary: Get a users feature.
+  /api/vote/{featureId}:
+    put:
+      consumes:
+      - application/json
+      description: Enables the user to place one vote against another users feature
+        request.
+      parameters:
+      - description: Feature ID
+        in: path
+        name: featureId
+        required: true
+        type: string
+      - description: Upvote Request Body
+        in: body
+        name: upvoteRequest
+        required: true
+        schema:
+          $ref: '#/definitions/upvote.UpvoteRequest'
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/upvote.UpvoteResponse'
+        "400":
+          description: Bad Request
+          schema: {}
+        "404":
+          description: Not Found
+          schema: {}
+        "409":
+          description: Conflict
+          schema: {}
+        "500":
+          description: Internal Server Error
+          schema: {}
+      summary: Enables the user to vote for a new feature request.
   /status:
     get:
       consumes:

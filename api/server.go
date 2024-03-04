@@ -13,6 +13,7 @@ import (
 	"github.com/music-tribe/react-pairing-challenge/handlers/get"
 	"github.com/music-tribe/react-pairing-challenge/handlers/getall"
 	"github.com/music-tribe/react-pairing-challenge/handlers/update"
+	"github.com/music-tribe/react-pairing-challenge/handlers/upvote"
 	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
@@ -45,6 +46,8 @@ func main() {
 	grp.PUT("/:userId", update.Update(db))
 	grp.GET("/:userId/:featureId", get.Get(db))
 	grp.DELETE("/:userId/:featureId", delete.Delete(db))
+
+	grp.PUT("/vote/:featureId", upvote.Upvote(db))
 
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 

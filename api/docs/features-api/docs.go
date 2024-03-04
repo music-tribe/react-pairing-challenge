@@ -18,6 +18,60 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/api/vote/{featureId}": {
+            "put": {
+                "description": "Enables the user to place one vote against another users feature request.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "text/plain"
+                ],
+                "summary": "Enables the user to vote for a new feature request.",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Feature ID",
+                        "name": "featureId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Upvote Request Body",
+                        "name": "upvoteRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/upvote.UpvoteRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/upvote.UpvoteResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {}
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {}
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {}
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {}
+                    }
+                }
+            }
+        },
         "/api/{userId}": {
             "get": {
                 "description": "Get a all features releted to this userId.",
@@ -307,6 +361,31 @@ const docTemplate = `{
                     "items": {
                         "type": "string"
                     }
+                }
+            }
+        },
+        "upvote.UpvoteRequest": {
+            "type": "object",
+            "required": [
+                "userId"
+            ],
+            "properties": {
+                "userId": {
+                    "type": "string",
+                    "example": "202c25c4-b2ce-4514-9045-890a1aa896ea"
+                }
+            }
+        },
+        "upvote.UpvoteResponse": {
+            "type": "object",
+            "properties": {
+                "featureId": {
+                    "type": "string",
+                    "example": "b1f01569-ecff-4c60-a716-435b2e51f1ff"
+                },
+                "voteCount": {
+                    "type": "integer",
+                    "example": 45928
                 }
             }
         }
