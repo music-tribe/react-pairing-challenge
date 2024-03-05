@@ -32,7 +32,7 @@ func TestDelete(t *testing.T) {
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
 		ctx := e.NewContext(req, rec)
-		ctx.SetParamNames("userId", "taskId")
+		ctx.SetParamNames("userId", "featureId")
 		ctx.SetParamValues(uuid.New().String(), "")
 
 		err := Delete(db)(ctx)
@@ -49,11 +49,11 @@ func TestDelete(t *testing.T) {
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
 		ctx := e.NewContext(req, rec)
-		ctx.SetParamNames("userId", "taskId")
+		ctx.SetParamNames("userId", "featureId")
 		ctx.SetParamValues(uuid.New().String(), uuid.Nil.String())
 
 		err := Delete(db)(ctx)
-		assert.ErrorContains(t, err, "Error:Field validation for 'TaskId' failed on the 'required' tag")
+		assert.ErrorContains(t, err, "Error:Field validation for 'FeatureId' failed on the 'required' tag")
 		assert.Equal(t, http.StatusBadRequest, deleteStatusCode(rec, err))
 	})
 
@@ -68,7 +68,7 @@ func TestDelete(t *testing.T) {
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
 		ctx := e.NewContext(req, rec)
-		ctx.SetParamNames("userId", "taskId")
+		ctx.SetParamNames("userId", "featureId")
 		ctx.SetParamValues(userId.String(), id.String())
 
 		db.EXPECT().Delete(userId, id).Return(database.ErrNotFound)
@@ -89,7 +89,7 @@ func TestDelete(t *testing.T) {
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
 		ctx := e.NewContext(req, rec)
-		ctx.SetParamNames("userId", "taskId")
+		ctx.SetParamNames("userId", "featureId")
 		ctx.SetParamValues(userId.String(), id.String())
 
 		db.EXPECT().Delete(userId, id).Return(errors.New("some error"))
@@ -99,7 +99,7 @@ func TestDelete(t *testing.T) {
 		assert.Equal(t, http.StatusInternalServerError, deleteStatusCode(rec, err))
 	})
 
-	t.Run("when the request is well formed, we should delete the task back and no error", func(t *testing.T) {
+	t.Run("when the request is well formed, we should delete the feature back and no error", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 		db := deletemocks.NewMockDeleteDatabase(ctrl)
@@ -110,7 +110,7 @@ func TestDelete(t *testing.T) {
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
 		ctx := e.NewContext(req, rec)
-		ctx.SetParamNames("userId", "taskId")
+		ctx.SetParamNames("userId", "featureId")
 		ctx.SetParamValues(userId.String(), id.String())
 
 		db.EXPECT().Delete(userId, id).Return(nil)

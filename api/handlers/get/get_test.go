@@ -34,7 +34,7 @@ func TestGet(t *testing.T) {
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
 		ctx := e.NewContext(req, rec)
-		ctx.SetParamNames("userId", "taskId")
+		ctx.SetParamNames("userId", "featureId")
 		ctx.SetParamValues("", uuid.New().String())
 
 		err := Get(db)(ctx)
@@ -51,7 +51,7 @@ func TestGet(t *testing.T) {
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
 		ctx := e.NewContext(req, rec)
-		ctx.SetParamNames("userId", "taskId")
+		ctx.SetParamNames("userId", "featureId")
 		ctx.SetParamValues(uuid.Nil.String(), uuid.New().String())
 
 		err := Get(db)(ctx)
@@ -68,7 +68,7 @@ func TestGet(t *testing.T) {
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
 		ctx := e.NewContext(req, rec)
-		ctx.SetParamNames("userId", "taskId")
+		ctx.SetParamNames("userId", "featureId")
 		ctx.SetParamValues(uuid.New().String(), "")
 
 		err := Get(db)(ctx)
@@ -85,11 +85,11 @@ func TestGet(t *testing.T) {
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
 		ctx := e.NewContext(req, rec)
-		ctx.SetParamNames("userId", "taskId")
+		ctx.SetParamNames("userId", "featureId")
 		ctx.SetParamValues(uuid.New().String(), uuid.Nil.String())
 
 		err := Get(db)(ctx)
-		assert.ErrorContains(t, err, "Error:Field validation for 'TaskId' failed on the 'required' tag")
+		assert.ErrorContains(t, err, "Error:Field validation for 'FeatureId' failed on the 'required' tag")
 		assert.Equal(t, http.StatusBadRequest, getStatusCode(rec, err))
 	})
 
@@ -104,7 +104,7 @@ func TestGet(t *testing.T) {
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
 		ctx := e.NewContext(req, rec)
-		ctx.SetParamNames("userId", "taskId")
+		ctx.SetParamNames("userId", "featureId")
 		ctx.SetParamValues(userId.String(), id.String())
 
 		db.EXPECT().Get(userId, id).Return(nil, database.ErrNotFound)
@@ -125,7 +125,7 @@ func TestGet(t *testing.T) {
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
 		ctx := e.NewContext(req, rec)
-		ctx.SetParamNames("userId", "taskId")
+		ctx.SetParamNames("userId", "featureId")
 		ctx.SetParamValues(userId.String(), id.String())
 
 		db.EXPECT().Get(userId, id).Return(nil, errors.New("some error"))
@@ -135,7 +135,7 @@ func TestGet(t *testing.T) {
 		assert.Equal(t, http.StatusInternalServerError, getStatusCode(rec, err))
 	})
 
-	t.Run("when the request is well formed, we should get the task back and no error", func(t *testing.T) {
+	t.Run("when the request is well formed, we should get the feature back and no error", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 		db := getmocks.NewMockGetDatabase(ctrl)
@@ -146,26 +146,26 @@ func TestGet(t *testing.T) {
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
 		ctx := e.NewContext(req, rec)
-		ctx.SetParamNames("userId", "taskId")
+		ctx.SetParamNames("userId", "featureId")
 		ctx.SetParamValues(userId.String(), id.String())
 
-		expectTask := domain.Task{
+		expectfeature := domain.Feature{
 			Id:          id,
 			UserId:      userId,
 			Name:        "blah",
 			Description: "is it done yet",
 		}
 
-		db.EXPECT().Get(userId, id).Return(&expectTask, nil)
+		db.EXPECT().Get(userId, id).Return(&expectfeature, nil)
 
 		err := Get(db)(ctx)
 		assert.NoError(t, err)
 		assert.Equal(t, http.StatusOK, getStatusCode(rec, err))
 
-		actualTask := new(domain.Task)
-		err = json.Unmarshal(rec.Body.Bytes(), actualTask)
+		actualfeature := new(domain.Feature)
+		err = json.Unmarshal(rec.Body.Bytes(), actualfeature)
 		assert.NoError(t, err)
-		assert.Equal(t, expectTask, *actualTask)
+		assert.Equal(t, expectfeature, *actualfeature)
 	})
 }
 

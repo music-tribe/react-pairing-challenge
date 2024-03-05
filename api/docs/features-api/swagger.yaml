@@ -1,41 +1,90 @@
 basePath: /
 definitions:
+  add.AddRequest:
+    properties:
+      description:
+        example: Could we have this new feature please?
+        type: string
+      name:
+        example: My New Feature Request
+        type: string
+      userId:
+        example: 202c25c4-b2ce-4514-9045-890a1aa896ea
+        type: string
+      votes:
+        example:
+        - '[''155dccaa-0299-4018-ab6b-90b9ee448943'''
+        - '''ef2a27c4-b03d-4190-86f2-b1dc2538243e'']'
+        items:
+          type: string
+        type: array
+    required:
+    - description
+    - name
+    - userId
+    type: object
   add.AddResponse:
     properties:
       id:
         type: string
     type: object
-  domain.Task:
+  domain.Feature:
     properties:
-      completed:
-        type: boolean
       description:
+        example: Could we have this new feature please?
         type: string
       id:
+        example: f6e7f8c4-3af6-4028-ac7c-30c9d79a3fa7
         type: string
       name:
+        example: My New Feature Request
         type: string
       userId:
+        example: effe01ec-7f09-4a1c-9453-794212a8ac26
         type: string
+      votes:
+        example:
+        - '[''155dccaa-0299-4018-ab6b-90b9ee448943'''
+        - '''ef2a27c4-b03d-4190-86f2-b1dc2538243e'']'
+        items:
+          type: string
+        type: array
     required:
     - description
     - name
     - userId
+    type: object
+  upvote.UpvoteRequest:
+    properties:
+      userId:
+        example: 202c25c4-b2ce-4514-9045-890a1aa896ea
+        type: string
+    required:
+    - userId
+    type: object
+  upvote.UpvoteResponse:
+    properties:
+      featureId:
+        example: b1f01569-ecff-4c60-a716-435b2e51f1ff
+        type: string
+      voteCount:
+        example: 45928
+        type: integer
     type: object
 host: localhost:8083
 info:
   contact:
     email: cloud@musictribe.com
     name: MCloud Team
-  description: This API allows you to create, get, alter and delete tasks.
-  title: tasks API
+  description: This API allows you to create, get, alter and delete features.
+  title: features API
   version: "1.0"
 paths:
   /api/{userId}:
     get:
       consumes:
       - application/json
-      description: Get a all tasks releted to this userId.
+      description: Get a all features releted to this userId.
       parameters:
       - description: User UUID
         in: path
@@ -49,7 +98,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/domain.Task'
+              $ref: '#/definitions/domain.Feature'
             type: array
         "400":
           description: Bad Request
@@ -60,18 +109,18 @@ paths:
         "500":
           description: Internal Server Error
           schema: {}
-      summary: Get all of a users tasks.
+      summary: Get all of a users features.
     post:
       consumes:
       - application/json
-      description: Add a new task for this user id.
+      description: Add a new feature for this user id.
       parameters:
-      - description: Task
+      - description: Feature
         in: body
-        name: task
+        name: feature
         required: true
         schema:
-          $ref: '#/definitions/domain.Task'
+          $ref: '#/definitions/add.AddRequest'
       - description: User UUID
         in: path
         name: userId
@@ -93,30 +142,30 @@ paths:
         "500":
           description: Internal Server Error
           schema: {}
-      summary: Add a new task for this user.
+      summary: Add a new feature for this user.
     put:
       consumes:
       - application/json
-      description: Get a all tasks releted to this userId.
+      description: Get a all features releted to this userId.
       parameters:
       - description: User UUID
         in: path
         name: userId
         required: true
         type: string
-      - description: Task
+      - description: Feature
         in: body
-        name: task
+        name: feature
         required: true
         schema:
-          $ref: '#/definitions/domain.Task'
+          $ref: '#/definitions/domain.Feature'
       produces:
       - text/plain
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/domain.Task'
+            $ref: '#/definitions/domain.Feature'
         "400":
           description: Bad Request
           schema: {}
@@ -126,21 +175,21 @@ paths:
         "500":
           description: Internal Server Error
           schema: {}
-      summary: Get all of a users tasks.
-  /api/{userId}/{taskId}:
+      summary: Get all of a users features.
+  /api/{userId}/{featureId}:
     delete:
       consumes:
       - application/json
-      description: Delete one of this users tasks.
+      description: Delete one of this users features.
       parameters:
       - description: User UUID
         in: path
         name: userId
         required: true
         type: string
-      - description: Task UUID
+      - description: Feature UUID
         in: path
-        name: taskId
+        name: featureId
         required: true
         type: string
       produces:
@@ -159,20 +208,20 @@ paths:
         "500":
           description: Internal Server Error
           schema: {}
-      summary: Delete a users task.
+      summary: Delete a users feature.
     get:
       consumes:
       - application/json
-      description: Get a task with matching task and user id.
+      description: Get a feature with matching feature and user id.
       parameters:
       - description: User UUID
         in: path
         name: userId
         required: true
         type: string
-      - description: Task UUID
+      - description: Feature UUID
         in: path
-        name: taskId
+        name: featureId
         required: true
         type: string
       produces:
@@ -181,7 +230,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/domain.Task'
+            $ref: '#/definitions/domain.Feature'
         "400":
           description: Bad Request
           schema: {}
@@ -191,7 +240,45 @@ paths:
         "500":
           description: Internal Server Error
           schema: {}
-      summary: Get a users task.
+      summary: Get a users feature.
+  /api/vote/{featureId}:
+    put:
+      consumes:
+      - application/json
+      description: Enables the user to place one vote against another users feature
+        request.
+      parameters:
+      - description: Feature ID
+        in: path
+        name: featureId
+        required: true
+        type: string
+      - description: Upvote Request Body
+        in: body
+        name: upvoteRequest
+        required: true
+        schema:
+          $ref: '#/definitions/upvote.UpvoteRequest'
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/upvote.UpvoteResponse'
+        "400":
+          description: Bad Request
+          schema: {}
+        "404":
+          description: Not Found
+          schema: {}
+        "409":
+          description: Conflict
+          schema: {}
+        "500":
+          description: Internal Server Error
+          schema: {}
+      summary: Enables the user to vote for a new feature request.
   /status:
     get:
       consumes:

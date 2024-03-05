@@ -13,6 +13,13 @@ stop:
 build:
 	docker compose -f api/docker-compose.yaml build
 
-test: start
+test: mocks start
 	cd api/ && go test ./... -v
 	make stop
+
+mocks:
+	go install github.com/golang/mock/mockgen@v1.6.0
+	cd api && go generate ./...
+
+docs:
+	cd api && swag init -g *.go --output docs/features-api

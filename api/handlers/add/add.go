@@ -12,21 +12,27 @@ import (
 
 //go:generate mockgen -destination=./mocks/add.go -package=addmocks -source=add.go
 type AddDatabase interface {
-	Add(task *domain.Task) error
+	Add(feature *domain.Feature) error
+}
+
+type AddRequest struct {
+	Id          uuid.UUID   `json:"-" bson:"_id"`
+	UserId      uuid.UUID   `json:"userId" param:"userId" bson:"userId" validate:"required" example:"202c25c4-b2ce-4514-9045-890a1aa896ea"`
+	Name        string      `json:"name" validate:"required" example:"My New Feature Request"`
+	Description string      `json:"description" validate:"required" example:"Could we have this new feature please?"`
+	Votes       []uuid.UUID `json:"votes" example:"['155dccaa-0299-4018-ab6b-90b9ee448943','ef2a27c4-b03d-4190-86f2-b1dc2538243e']"`
 }
 
 type AddResponse struct {
 	Id uuid.UUID `json:"id"`
 }
 
-type Error echo.HTTPError
-
 // Add godoc
-// @Summary Add a new task for this user.
-// @Description Add a new task for this user id.
+// @Summary Add a new feature for this user.
+// @Description Add a new feature for this user id.
 // @Accept application/json
 // @Produce application/json
-// @Param task body domain.Task true "Task"
+// @Param feature body AddRequest true "Feature"
 // @Param userId path string true "User UUID"
 // @Router /api/{userId} [post]
 // @Success 200 {object} AddResponse
@@ -39,27 +45,27 @@ func Add(db AddDatabase) func(echo.Context) error {
 	}
 
 	return func(c echo.Context) error {
-		task := domain.Task{}
+		feature := domain.Feature{}
 
-		if err := c.Bind(&task); err != nil {
+		if err := c.Bind(&feature); err != nil {
 			return echo.NewHTTPError(http.StatusBadRequest, err)
 		}
 
-		if task.Id == uuid.Nil {
-			task.Id = uuid.New()
+		if feature.Id == uuid.Nil {
+			feature.Id = uuid.New()
 		}
 
-		if err := validator.New().Struct(&task); err != nil {
+		if err := validator.New().Struct(&feature); err != nil {
 			return echo.NewHTTPError(http.StatusBadRequest, err)
 		}
 
-		if err := db.Add(&task); err != nil {
+		if err := db.Add(&feature); err != nil {
 			if err == database.ErrDuplicate {
 				return echo.NewHTTPError(http.StatusConflict, err)
 			}
 			return echo.NewHTTPError(http.StatusInternalServerError, err)
 		}
 
-		return c.JSON(http.StatusCreated, AddResponse{Id: task.Id})
+		return c.JSON(http.StatusCreated, AddResponse{Id: feature.Id})
 	}
 }

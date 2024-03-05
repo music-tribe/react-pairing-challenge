@@ -4,8 +4,8 @@
     ],
     "swagger": "2.0",
     "info": {
-        "description": "This API allows you to create, get, alter and delete tasks.",
-        "title": "tasks API",
+        "description": "This API allows you to create, get, alter and delete features.",
+        "title": "features API",
         "contact": {
             "name": "MCloud Team",
             "email": "cloud@musictribe.com"
@@ -15,16 +15,70 @@
     "host": "localhost:8083",
     "basePath": "/",
     "paths": {
-        "/api/{userId}": {
-            "get": {
-                "description": "Get a all tasks releted to this userId.",
+        "/api/vote/{featureId}": {
+            "put": {
+                "description": "Enables the user to place one vote against another users feature request.",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "text/plain"
                 ],
-                "summary": "Get all of a users tasks.",
+                "summary": "Enables the user to vote for a new feature request.",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Feature ID",
+                        "name": "featureId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Upvote Request Body",
+                        "name": "upvoteRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/upvote.UpvoteRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/upvote.UpvoteResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {}
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {}
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {}
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {}
+                    }
+                }
+            }
+        },
+        "/api/{userId}": {
+            "get": {
+                "description": "Get a all features releted to this userId.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "text/plain"
+                ],
+                "summary": "Get all of a users features.",
                 "parameters": [
                     {
                         "type": "string",
@@ -40,7 +94,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/domain.Task"
+                                "$ref": "#/definitions/domain.Feature"
                             }
                         }
                     },
@@ -59,14 +113,14 @@
                 }
             },
             "put": {
-                "description": "Get a all tasks releted to this userId.",
+                "description": "Get a all features releted to this userId.",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "text/plain"
                 ],
-                "summary": "Get all of a users tasks.",
+                "summary": "Get all of a users features.",
                 "parameters": [
                     {
                         "type": "string",
@@ -76,12 +130,12 @@
                         "required": true
                     },
                     {
-                        "description": "Task",
-                        "name": "task",
+                        "description": "Feature",
+                        "name": "feature",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/domain.Task"
+                            "$ref": "#/definitions/domain.Feature"
                         }
                     }
                 ],
@@ -89,7 +143,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/domain.Task"
+                            "$ref": "#/definitions/domain.Feature"
                         }
                     },
                     "400": {
@@ -107,22 +161,22 @@
                 }
             },
             "post": {
-                "description": "Add a new task for this user id.",
+                "description": "Add a new feature for this user id.",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Add a new task for this user.",
+                "summary": "Add a new feature for this user.",
                 "parameters": [
                     {
-                        "description": "Task",
-                        "name": "task",
+                        "description": "Feature",
+                        "name": "feature",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/domain.Task"
+                            "$ref": "#/definitions/add.AddRequest"
                         }
                     },
                     {
@@ -155,16 +209,16 @@
                 }
             }
         },
-        "/api/{userId}/{taskId}": {
+        "/api/{userId}/{featureId}": {
             "get": {
-                "description": "Get a task with matching task and user id.",
+                "description": "Get a feature with matching feature and user id.",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "text/plain"
                 ],
-                "summary": "Get a users task.",
+                "summary": "Get a users feature.",
                 "parameters": [
                     {
                         "type": "string",
@@ -175,8 +229,8 @@
                     },
                     {
                         "type": "string",
-                        "description": "Task UUID",
-                        "name": "taskId",
+                        "description": "Feature UUID",
+                        "name": "featureId",
                         "in": "path",
                         "required": true
                     }
@@ -185,7 +239,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/domain.Task"
+                            "$ref": "#/definitions/domain.Feature"
                         }
                     },
                     "400": {
@@ -203,14 +257,14 @@
                 }
             },
             "delete": {
-                "description": "Delete one of this users tasks.",
+                "description": "Delete one of this users features.",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "text/plain"
                 ],
-                "summary": "Delete a users task.",
+                "summary": "Delete a users feature.",
                 "parameters": [
                     {
                         "type": "string",
@@ -221,8 +275,8 @@
                     },
                     {
                         "type": "string",
-                        "description": "Task UUID",
-                        "name": "taskId",
+                        "description": "Feature UUID",
+                        "name": "featureId",
                         "in": "path",
                         "required": true
                     }
@@ -271,6 +325,38 @@
         }
     },
     "definitions": {
+        "add.AddRequest": {
+            "type": "object",
+            "required": [
+                "description",
+                "name",
+                "userId"
+            ],
+            "properties": {
+                "description": {
+                    "type": "string",
+                    "example": "Could we have this new feature please?"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "My New Feature Request"
+                },
+                "userId": {
+                    "type": "string",
+                    "example": "202c25c4-b2ce-4514-9045-890a1aa896ea"
+                },
+                "votes": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "example": [
+                        "['155dccaa-0299-4018-ab6b-90b9ee448943'",
+                        "'ef2a27c4-b03d-4190-86f2-b1dc2538243e']"
+                    ]
+                }
+            }
+        },
         "add.AddResponse": {
             "type": "object",
             "properties": {
@@ -279,7 +365,7 @@
                 }
             }
         },
-        "domain.Task": {
+        "domain.Feature": {
             "type": "object",
             "required": [
                 "description",
@@ -287,20 +373,56 @@
                 "userId"
             ],
             "properties": {
-                "completed": {
-                    "type": "boolean"
-                },
                 "description": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Could we have this new feature please?"
                 },
                 "id": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "f6e7f8c4-3af6-4028-ac7c-30c9d79a3fa7"
                 },
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "My New Feature Request"
                 },
                 "userId": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "effe01ec-7f09-4a1c-9453-794212a8ac26"
+                },
+                "votes": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "example": [
+                        "['155dccaa-0299-4018-ab6b-90b9ee448943'",
+                        "'ef2a27c4-b03d-4190-86f2-b1dc2538243e']"
+                    ]
+                }
+            }
+        },
+        "upvote.UpvoteRequest": {
+            "type": "object",
+            "required": [
+                "userId"
+            ],
+            "properties": {
+                "userId": {
+                    "type": "string",
+                    "example": "202c25c4-b2ce-4514-9045-890a1aa896ea"
+                }
+            }
+        },
+        "upvote.UpvoteResponse": {
+            "type": "object",
+            "properties": {
+                "featureId": {
+                    "type": "string",
+                    "example": "b1f01569-ecff-4c60-a716-435b2e51f1ff"
+                },
+                "voteCount": {
+                    "type": "integer",
+                    "example": 45928
                 }
             }
         }

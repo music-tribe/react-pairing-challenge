@@ -12,23 +12,23 @@ import (
 
 //go:generate mockgen -destination=./mocks/get.go -package=getmocks -source=get.go
 type GetDatabase interface {
-	Get(userId, taskId uuid.UUID) (*domain.Task, error)
+	Get(userId, featureId uuid.UUID) (*domain.Feature, error)
 }
 
 type GetRequest struct {
-	UserId uuid.UUID `param:"userId" validate:"required"`
-	TaskId uuid.UUID `param:"taskId" validate:"required"`
+	UserId    uuid.UUID `param:"userId" validate:"required" example:"ef2a27c4-b03d-4190-86f2-b1dc2538243e"`
+	FeatureId uuid.UUID `param:"featureId" validate:"required" example:"202c25c4-b2ce-4514-9045-890a1aa896ea"`
 }
 
 // Get godoc
-// @Summary Get a users task.
-// @Description Get a task with matching task and user id.
+// @Summary Get a users feature.
+// @Description Get a feature with matching feature and user id.
 // @Accept application/json
 // @Produce text/plain
 // @Param userId path string true "User UUID"
-// @Param taskId path string true "Task UUID"
-// @Router /api/{userId}/{taskId} [get]
-// @Success 200 {object} domain.Task
+// @Param featureId path string true "Feature UUID"
+// @Router /api/{userId}/{featureId} [get]
+// @Success 200 {object} domain.Feature
 // @failure 400 {object} error
 // @failure 404 {object} error
 // @failure 500 {object} error
@@ -48,7 +48,7 @@ func Get(db GetDatabase) func(echo.Context) error {
 			return echo.NewHTTPError(http.StatusBadRequest, err)
 		}
 
-		task, err := db.Get(req.UserId, req.TaskId)
+		feature, err := db.Get(req.UserId, req.FeatureId)
 		if err != nil {
 			if err == database.ErrNotFound {
 				return echo.NewHTTPError(http.StatusNotFound, err)
@@ -56,6 +56,6 @@ func Get(db GetDatabase) func(echo.Context) error {
 			return echo.NewHTTPError(http.StatusInternalServerError, err)
 		}
 
-		return c.JSON(http.StatusOK, task)
+		return c.JSON(http.StatusOK, feature)
 	}
 }

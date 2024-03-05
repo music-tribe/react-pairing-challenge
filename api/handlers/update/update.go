@@ -11,18 +11,18 @@ import (
 
 //go:generate mockgen -destination=./mocks/update.go -package=updatemocks -source=update.go
 type UpdateDatabase interface {
-	Update(task *domain.Task) error
+	Update(feature *domain.Feature) error
 }
 
 // Update godoc
-// @Summary Get all of a users tasks.
-// @Description Get a all tasks releted to this userId.
+// @Summary Get all of a users features.
+// @Description Get a all features releted to this userId.
 // @Accept application/json
 // @Produce text/plain
 // @Param userId path string true "User UUID"
-// @Param task body domain.Task true "Task"
+// @Param feature body domain.Feature true "Feature"
 // @Router /api/{userId} [put]
-// @Success 200 {object} domain.Task
+// @Success 200 {object} domain.Feature
 // @failure 400 {object} error
 // @failure 404 {object} error
 // @failure 500 {object} error
@@ -32,23 +32,23 @@ func Update(db UpdateDatabase) func(echo.Context) error {
 	}
 
 	return func(c echo.Context) error {
-		task := domain.Task{}
+		feature := domain.Feature{}
 
-		if err := c.Bind(&task); err != nil {
+		if err := c.Bind(&feature); err != nil {
 			return echo.NewHTTPError(http.StatusBadRequest, err)
 		}
 
-		if err := validator.New().Struct(&task); err != nil {
+		if err := validator.New().Struct(&feature); err != nil {
 			return echo.NewHTTPError(http.StatusBadRequest, err)
 		}
 
-		if err := db.Update(&task); err != nil {
+		if err := db.Update(&feature); err != nil {
 			if err == database.ErrNotFound {
 				return echo.NewHTTPError(http.StatusNotFound, err)
 			}
 			return echo.NewHTTPError(http.StatusInternalServerError, err)
 		}
 
-		return c.JSON(http.StatusOK, task)
+		return c.JSON(http.StatusOK, feature)
 	}
 }

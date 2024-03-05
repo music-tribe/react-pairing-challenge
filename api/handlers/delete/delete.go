@@ -15,18 +15,18 @@ type DeleteDatabase interface {
 }
 
 type DeleteRequest struct {
-	UserId uuid.UUID `param:"userId" validate:"required"`
-	TaskId uuid.UUID `param:"taskId" validate:"required"`
+	UserId    uuid.UUID `param:"userId" validate:"required" example:"ef2a27c4-b03d-4190-86f2-b1dc2538243e"`
+	FeatureId uuid.UUID `param:"featureId" validate:"required" example:"202c25c4-b2ce-4514-9045-890a1aa896ea"`
 }
 
 // Delete godoc
-// @Summary Delete a users task.
-// @Description Delete one of this users tasks.
+// @Summary Delete a users feature.
+// @Description Delete one of this users features.
 // @Accept application/json
 // @Produce text/plain
 // @Param userId path string true "User UUID"
-// @Param taskId path string true "Task UUID"
-// @Router /api/{userId}/{taskId} [delete]
+// @Param featureId path string true "Feature UUID"
+// @Router /api/{userId}/{featureId} [delete]
 // @Success 200 {string} string "DELETED"
 // @failure 400 {object} error
 // @failure 404 {object} error
@@ -47,7 +47,7 @@ func Delete(db DeleteDatabase) func(echo.Context) error {
 			return echo.NewHTTPError(http.StatusBadRequest, err)
 		}
 
-		err := db.Delete(req.UserId, req.TaskId)
+		err := db.Delete(req.UserId, req.FeatureId)
 		if err != nil {
 			if err == database.ErrNotFound {
 				return echo.NewHTTPError(http.StatusNotFound, err)
