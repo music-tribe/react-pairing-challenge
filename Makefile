@@ -1,17 +1,17 @@
 start_with_logs:
-	docker compose -f api/docker-compose.yaml up
+	docker compose -f api/docker-compose.yml up
 
 start:
-	docker compose -f api/docker-compose.yaml up -d --remove-orphans
+	docker compose -f api/docker-compose.yml up -d --remove-orphans
 
 start_db:
-	docker compose -f api/docker-compose.yaml run database
+	docker compose -f api/docker-compose.yml run database
 
 stop: 
-	docker compose -f api/docker-compose.yaml down
+	docker compose -f api/docker-compose.yml down
 
-build:
-	docker compose -f api/docker-compose.yaml build
+build: mocks docs
+	docker compose -f api/docker-compose.yml build
 
 test: mocks start
 	cd api/ && go test ./... -v

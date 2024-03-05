@@ -11,6 +11,7 @@ To build the API, open your CLI in the root of this React-Pairing-Challenge repo
 ```
 make build
 ```
+This will generate all the mocks and docs
 
 ## Run
 To run the API while still in the root of this repo run the command...
@@ -27,3 +28,9 @@ make stop
 ```
 
 Once the program is running, Swagger documentation reagarding the API will be available at http://localhost:8083/swagger/index.html
+
+## Test
+To run the test suite, from the root of this directory, run the command...
+```
+make test
+```

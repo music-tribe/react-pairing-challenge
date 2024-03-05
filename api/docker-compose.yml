@@ -1,7 +1,6 @@
 version: '3.7'
 services:
   features-api:
-    # image: "acrpairingchallenge.azurecr.io/api-features-api:latest"
     build: .
     ports:
       - "80:8083"
