@@ -22,4 +22,4 @@ mocks:
 	cd api && go generate ./...
 
 docs:
-	cd api && swag init -g *.go --output docs/features-api
+	cd api && go install github.com/swaggo/swag/cmd/swag@latest && swag init -g *.go --output docs/features-api
